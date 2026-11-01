@@ -417,9 +417,27 @@
     .scrollbar-none::-webkit-scrollbar {
       display: none;
     }
-    #lineup-scroll-container, #archive-scroll-container {
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
+
+    /* Explicit Mobile Touch Scroll CSS (High-Priority Overrides) */
+    #lineup-scroll-container,
+    #archive-scroll-container {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      touch-action: pan-x pan-y !important;
+      -webkit-overflow-scrolling: touch !important;
+      scroll-snap-type: x mandatory !important;
+      scroll-behavior: smooth !important;
+    }
+
+    #lineup-scroll-container > *,
+    #archive-scroll-container > *,
+    #lineup-scroll-container .coach-card,
+    #archive-scroll-container .archive-card {
+      flex-shrink: 0 !important;
+      scroll-snap-align: center !important;
     }
 
     /* Smooth horizontal scroll setups */
@@ -934,9 +952,7 @@
 
     <!-- Flush Horizontal Carousel of 9 Coaches (Smooth Gliding & Drag) -->
     <div id="lineup-scroll-container" class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-6 px-4 sm:px-12 py-6 -webkit-overflow-scrolling-touch touch-pan-x w-full select-none cursor-grab active:cursor-grabbing">
-      <div id="coaches-track" class="contents">
-        <!-- Coach cards will be injected by JavaScript using COACHES array -->
-      </div>
+      <!-- Coach cards will be injected directly by JavaScript using COACHES array -->
     </div>
   </section>
 
@@ -996,10 +1012,8 @@
     </div>
 
     <!-- Horizontal Staggered Visual Row with Gliding (Mobile-First Snap) -->
-    <div id="archive-scroll-container" class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-6 px-4 sm:px-12 py-6 -webkit-overflow-scrolling-touch touch-pan-x w-full select-none cursor-grab active:cursor-grabbing">
-      <div id="archive-track" class="contents">
-        <!-- Injected via ARCHIVE data -->
-      </div>
+    <div id="archive-scroll-container" class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-6 px-4 sm:px-12 py-6 -webkit-overflow-scrolling-touch touch-pan-x w-full select-none cursor-grab active:cursor-grabbing pb-6">
+      <!-- Injected via ARCHIVE data directly into archive-scroll-container -->
     </div>
 
     <!-- Bottom Progress Bar for Archive -->
@@ -2058,7 +2072,7 @@
        4. RENDER COACHES (9 Panels, Natural Color Hover)
     ---------------------------------------------------- */
     function renderCoaches() {
-      const track = document.getElementById('coaches-track');
+      const track = document.getElementById('lineup-scroll-container') || document.getElementById('coaches-track');
       if (!track) return;
       track.innerHTML = '';
 
@@ -2225,7 +2239,7 @@
        6. RENDER ARCHIVE (Through Our Lens - Smooth Gliding)
     ---------------------------------------------------- */
     function renderArchive() {
-      const track = document.getElementById('archive-track');
+      const track = document.getElementById('archive-scroll-container') || document.getElementById('archive-track');
       if (!track) return;
       track.innerHTML = '';
 

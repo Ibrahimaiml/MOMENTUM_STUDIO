@@ -202,9 +202,26 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
-#lineup-scroll-container, #archive-scroll-container {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+/* Explicit Mobile Touch Scroll CSS (High-Priority Overrides) */
+#lineup-scroll-container,
+#archive-scroll-container {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  touch-action: pan-x pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-snap-type: x mandatory !important;
+  scroll-behavior: smooth !important;
+}
+
+#lineup-scroll-container > *,
+#archive-scroll-container > *,
+#lineup-scroll-container .coach-card,
+#archive-scroll-container .archive-card {
+  flex-shrink: 0 !important;
+  scroll-snap-align: center !important;
 }
 
 /* Horizontal Scrolling */
