@@ -1,0 +1,2959 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>MOMENTUM STUDIO | MRC Nagar, Chennai | Performance Studio</title>
+  <meta name="description" content="Empowering Every Generation. Chennai's premier HYROX affiliated performance studio above Starbucks MRC Nagar. Elite S&C, Hybrid Endurance, VALD Testing, Youth LTAD & Physio Rehab." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="LOGO.png" />
+
+  <!-- Google Fonts: Bebas Neue, Space Mono, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            momentum: {
+              orange: '#F97316',
+              rose: '#E11D48',
+              canvas: '#0B0E17',
+              card: '#131824',
+              cardHover: '#1A2234',
+              surface: '#151C2E',
+              border: 'rgba(255, 255, 255, 0.08)',
+              textMuted: '#94A3B8',
+            }
+          },
+          fontFamily: {
+            bebas: ['"Bebas Neue"', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    };
+  </script>
+
+  <!-- GSAP 3.12 & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ----------------------------------------------------
+       CORE RESETS & TYPOGRAPHY
+    ---------------------------------------------------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    html {
+      background-color: #0B0E17;
+      color: #FFFFFF;
+      overflow-x: clip;
+      max-width: 100vw;
+    }
+    body {
+      background-color: #0B0E17;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+      overflow-x: clip;
+      max-width: 100vw;
+      margin: 0;
+      padding: 0;
+    }
+
+    ::selection {
+      background: #F97316;
+      color: #0B0E17;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0E17;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1A2234;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #F97316;
+    }
+
+    /* Prefers Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .animate-marquee, .animate-footer-ghost {
+        animation: none !important;
+      }
+      #trail-canvas, #cursor-container {
+        display: none !important;
+      }
+      body {
+        cursor: auto !important;
+      }
+    }
+
+    /* ----------------------------------------------------
+       BEBAS NEUE HEADLINES
+    ---------------------------------------------------- */
+    .headline-bebas {
+      font-family: 'Bebas Neue', sans-serif;
+      text-transform: uppercase;
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+    }
+    .headline-bebas .dot {
+      color: #F97316;
+      display: inline-block;
+      text-shadow: 0 0 16px rgba(249, 115, 22, 0.9), 0 0 32px rgba(249, 115, 22, 0.6);
+    }
+
+    /* ----------------------------------------------------
+       MASK LINE ANIMATIONS
+    ---------------------------------------------------- */
+    .mask-wrap {
+      overflow: hidden;
+      display: block;
+    }
+    .mask-line {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+
+    /* ----------------------------------------------------
+       CUSTOM CURSOR & "M" CHEVRON TOUCH BADGE (DUAL DESKTOP & MOBILE)
+    ---------------------------------------------------- */
+    #cursor-container {
+      display: block;
+      pointer-events: none;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      body {
+        cursor: none;
+      }
+      body a, body button, body input, body select, body [role="button"] {
+        cursor: none;
+      }
+    }
+    @media (hover: none) or (pointer: coarse) {
+      body {
+        cursor: auto;
+      }
+      #trail-canvas {
+        display: none !important;
+      }
+      #cursor-ring {
+        opacity: 0;
+        transition: opacity 0.35s ease;
+      }
+      #cursor-ring.touch-active {
+        opacity: 1 !important;
+      }
+    }
+
+    #cursor-ring {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 44px;
+      height: 44px;
+      border: 1.5px solid rgba(249, 115, 22, 0.7);
+      border-radius: 50%;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.25s ease,
+                  border-color 0.25s ease,
+                  box-shadow 0.25s ease;
+      box-shadow: 0 0 15px rgba(249, 115, 22, 0.35);
+    }
+    #cursor-chevron-m {
+      filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.9));
+      animation: pulseM 2s ease-in-out infinite alternate;
+      transition: all 0.2s ease;
+    }
+    #cursor-dot {
+      pointer-events: none;
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 7px;
+      height: 7px;
+      background: #F97316;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #F97316, 0 0 18px #F97316;
+      transition: opacity 0.2s ease;
+    }
+    #cursor-morph-arrow {
+      display: none;
+    }
+
+    /* Cursor hover over links */
+    body.is-hovering #cursor-ring {
+      width: 64px;
+      height: 64px;
+      background-color: rgba(249, 115, 22, 0.12);
+      border-color: #F97316;
+      box-shadow: 0 0 30px rgba(249, 115, 22, 0.55);
+    }
+
+    /* Floating "M" Chevron Badge over interactive media cards */
+    body.is-card-hover #cursor-ring {
+      width: 56px;
+      height: 56px;
+      background: rgba(11, 14, 23, 0.88);
+      backdrop-filter: blur(8px);
+      border: 2px solid #F97316;
+      box-shadow: 0 0 25px rgba(249, 115, 22, 0.7);
+    }
+    body.is-card-hover #cursor-chevron-m {
+      display: block !important;
+      color: #F97316;
+      transform: scale(1.25);
+    }
+    body.is-card-hover #cursor-dot {
+      display: none;
+    }
+
+    #trail-canvas {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 99998;
+    }
+
+    @keyframes pulseM {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      100% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 10px rgba(249,115,22,1)); }
+    }
+
+    /* Fixed vertical guide lines */
+    .bg-grid-lines {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      opacity: 0.04;
+    }
+    .bg-grid-lines > div {
+      border-right: 1px solid #FFFFFF;
+    }
+
+    /* Subtle film grain overlay */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* ----------------------------------------------------
+       BUTTONS & GLOWS
+    ---------------------------------------------------- */
+    .btn-orange {
+      background: #F97316;
+      color: #0B0E17;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    .btn-orange:hover {
+      box-shadow: 0 0 35px rgba(249, 115, 22, 0.75);
+      transform: translateY(-1px);
+    }
+    .btn-circle-arrow {
+      width: 24px;
+      height: 24px;
+      background: #FFFFFF;
+      color: #0B0E17;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      transition: transform 0.25s ease;
+    }
+    .btn-orange:hover .btn-circle-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ----------------------------------------------------
+       IMAGE NATURAL BRIGHT FULL-COLOR HOVER TRANSITIONS
+    ---------------------------------------------------- */
+    .clean-image-card {
+      position: relative;
+      overflow: hidden;
+      background-color: #131824;
+    }
+    .clean-image-card img,
+    .coach-card img,
+    .archive-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top !important;
+      filter: grayscale(100%) contrast(125%) brightness(75%);
+      transition: filter 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .clean-image-card:hover img,
+    .clean-image-card.active img,
+    .coach-card:hover img,
+    .coach-card.active img,
+    .archive-card:hover img,
+    .archive-card.active img,
+    .archive-card.active-focus img,
+    .archive-card.in-view img,
+    .vip-card:hover img,
+    .track-stack-card:hover img,
+    .track-stack-card.active img {
+      filter: grayscale(0%) contrast(100%) brightness(100%) !important;
+      transform: scale(1.03);
+    }
+
+    .archive-card {
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      will-change: transform;
+    }
+    .archive-card.active-focus,
+    .archive-card:hover {
+      border-color: #F97316 !important;
+      box-shadow: 0 0 35px rgba(249, 115, 22, 0.45) !important;
+    }
+
+    /* Video 23 Archive Duotone Glow Tint */
+    .archive-duotone-color {
+      position: absolute;
+      inset: 0;
+      background-color: #F97316;
+      mix-blend-mode: color;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .archive-duotone-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(249, 115, 22, 0.7) 0%, rgba(249, 115, 22, 0) 70%);
+      mix-blend-mode: screen;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 6;
+    }
+    .archive-card:hover .archive-duotone-color,
+    .archive-card.active .archive-duotone-color {
+      opacity: 0.5;
+    }
+    .archive-card:hover .archive-duotone-glow,
+    .archive-card.active .archive-duotone-glow {
+      opacity: 0.85;
+    }
+
+    /* Preloader Slanted Vertical Parallelogram Stripes */
+    .curtain-container {
+      will-change: transform;
+    }
+    .curtain-strip {
+      will-change: transform;
+      background-color: #F97316;
+      border: none;
+      outline: none;
+    }
+
+    /* Smooth horizontal scroll setups */
+    .smooth-horizontal-scroll {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .smooth-horizontal-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .smooth-horizontal-scroll > * {
+      scroll-snap-align: start;
+    }
+
+    /* Ticket Barcode Pattern */
+    .ticket-barcode {
+      background: repeating-linear-gradient(
+        90deg,
+        #FFFFFF 0px,
+        #FFFFFF 2px,
+        transparent 2px,
+        transparent 5px,
+        #FFFFFF 5px,
+        #FFFFFF 9px,
+        transparent 9px,
+        transparent 11px,
+        #FFFFFF 11px,
+        #FFFFFF 14px,
+        transparent 14px,
+        transparent 18px,
+        #FFFFFF 18px,
+        #FFFFFF 20px,
+        transparent 20px,
+        transparent 23px
+      );
+    }
+
+    /* Marquee animation */
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marqueeScroll 24s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    /* Footer Ghost continuous smooth marquee */
+    @keyframes footerGhostMarquee {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+    .animate-footer-ghost {
+      display: flex;
+      width: max-content;
+      white-space: nowrap;
+      animation: footerGhostMarquee 26s linear infinite;
+      will-change: transform;
+    }
+
+    /* Fallback image placeholder */
+    .img-fallback-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #131824 0%, #1A2234 100%);
+      border: 1px solid rgba(249, 115, 22, 0.25);
+      color: #F97316;
+      font-family: 'Space Mono', monospace;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    /* Modal Styling */
+    #profile-modal {
+      transition: opacity 0.35s ease;
+    }
+    #profile-modal.hidden-modal {
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="bg-[#0B0E17] text-white selection:bg-[#F97316] selection:text-[#0B0E17]">
+
+  <!-- Fixed background vertical grid lines -->
+  <div class="bg-grid-lines">
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+
+  <!-- Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- ================================================== -->
+  <!-- CUSTOM CURSOR & CANVAS COMET TRAIL                 -->
+  <!-- ================================================== -->
+  <div id="cursor-container">
+    <canvas id="trail-canvas"></canvas>
+    <div id="cursor-ring">
+      <!-- Momentum "M" Chevron Logo Emblem Outline SVG -->
+      <svg id="cursor-chevron-m" class="w-4 h-4 text-[#F97316]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19L8 6L12 14L16 6L20 19" />
+      </svg>
+      <div id="cursor-dot"></div>
+      <i id="cursor-morph-arrow" class="fa-solid fa-arrow-up-right-from-square"></i>
+    </div>
+  </div>
+
+  <!-- ================================================== -->
+  <!-- 0. PRELOADER WITH SLIDING STRIPE CURTAIN REVEAL    -->
+  <!-- ================================================== -->
+  <div id="preloader" class="fixed inset-0 z-[10000] flex flex-col justify-between select-none overflow-hidden bg-[#F97316]">
+    <!-- 8 Vertical Slanted Parallelogram Stripes (Wipe Engine, skewX -14deg, overlapping 1px) -->
+    <div class="curtain-container absolute inset-0 z-0 flex pointer-events-none overflow-hidden" style="width: 130%; left: -15%;">
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center -mr-[2px]" style="transform: skewX(-14deg);"></div>
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center -mr-[2px]" style="transform: skewX(-14deg);"></div>
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center -mr-[2px]" style="transform: skewX(-14deg);"></div>
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center -mr-[2px]" style="transform: skewX(-14deg);"></div>
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center -mr-[2px]" style="transform: skewX(-14deg);"></div>
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center -mr-[2px]" style="transform: skewX(-14deg);"></div>
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center -mr-[2px]" style="transform: skewX(-14deg);"></div>
+      <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center" style="transform: skewX(-14deg);"></div>
+    </div>
+
+    <!-- Preloader Text & Counter Layer (in solid pitch-black text against the orange canvas) -->
+    <div id="preloader-content" class="relative z-10 flex flex-col justify-between h-full p-6 sm:p-10 md:p-14">
+      <!-- Top row -->
+      <div class="flex items-center justify-between text-xs font-mono tracking-[0.25em] text-black font-bold uppercase">
+        <div class="flex items-center gap-3">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-black"></span>
+          <span class="text-black font-black tracking-widest">MOMENTUM STUDIO</span>
+        </div>
+        <span class="hidden sm:inline-block text-black/80 font-bold">MRC NAGAR · CHENNAI</span>
+        <span class="text-black/80 font-bold">001 / CALIBRATION</span>
+      </div>
+
+      <!-- Center words with GSAP bounce reveal -->
+      <div class="my-auto text-center">
+        <p class="font-mono text-xs sm:text-sm tracking-[0.4em] text-black/85 uppercase mb-4 font-bold">
+          PERFORMANCE ARCHITECTURE
+        </p>
+        <h1 id="preloader-letters" class="headline-bebas text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] tracking-wider text-black flex flex-wrap justify-center gap-x-4 sm:gap-x-8 leading-none">
+          <span class="pre-word inline-block overflow-hidden">
+            <span class="pre-word-bounce inline-block text-black">MOMENTUM</span>
+          </span>
+          <span class="pre-word inline-block overflow-hidden">
+            <span class="pre-word-bounce inline-block text-black">STUDIO</span>
+          </span>
+        </h1>
+        <p class="font-mono text-[11px] sm:text-xs tracking-[0.3em] text-black/80 uppercase mt-6 font-semibold">
+          HYROX AFFILIATED · STRENGTH & CONDITIONING · VALD TECH
+        </p>
+      </div>
+
+      <!-- Bottom row with counter & progress bar -->
+      <div class="w-full">
+        <div class="flex items-baseline justify-between font-mono mb-3 text-xs sm:text-sm">
+          <span class="text-black/80 tracking-widest uppercase font-bold">INITIALIZING ENGINE</span>
+          <div class="flex items-baseline font-bebas text-4xl sm:text-6xl text-black font-bold">
+            <span id="preloader-counter">0</span><span class="text-black text-2xl sm:text-3xl ml-1 font-mono">%</span>
+          </div>
+        </div>
+        <div class="w-full h-[3px] bg-black/20 relative overflow-hidden rounded-full">
+          <div id="preloader-bar" class="h-full bg-black w-full origin-left scale-x-0"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================== -->
+  <!-- 1. FIXED NAVIGATION (Cleaned: No Audio Controls)   -->
+  <!-- ================================================== -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-4 sm:px-8 md:px-12 flex items-center justify-between border-b border-white/[0.05]">
+    <!-- Left: Spaced wordmark / logo -->
+    <a href="#hero" class="flex items-center gap-3 group focus:outline-none">
+      <img src="LOGO.png" alt="Momentum Logo" onerror="handleImgError(this, 'MOMENTUM')" class="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]" />
+      <div class="flex flex-col">
+        <span class="headline-bebas text-xl sm:text-2xl tracking-widest text-white leading-none">MOMENTUM</span>
+        <span class="font-mono text-[9px] tracking-[0.3em] text-[#F97316] uppercase leading-tight font-bold">STUDIO</span>
+      </div>
+    </a>
+
+    <!-- Centre: Navigation Links (desktop) -->
+    <div class="hidden lg:flex items-center gap-8 font-mono text-[11px] tracking-[0.25em] uppercase text-slate-300">
+      <a href="#movement" class="hover:text-[#F97316] transition-colors">ABOUT</a>
+      <a href="#coaches" class="hover:text-[#F97316] transition-colors">COACHES</a>
+      <a href="#tracks" class="hover:text-[#F97316] transition-colors">PROGRAMS</a>
+      <a href="#archive" class="hover:text-[#F97316] transition-colors">ARCHIVE</a>
+      <a href="#vip-voices" class="hover:text-[#F97316] transition-colors">VIP VOICES</a>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Light-grey "BOOK TRIAL" button -->
+      <a href="#booker" class="px-5 py-2.5 rounded-full bg-[#1A2234] hover:bg-[#242F46] border border-white/10 text-white font-mono text-xs tracking-wider uppercase transition-all flex items-center gap-2 group shadow-sm min-h-[44px]">
+        <span>BOOK TRIAL</span>
+        <span class="w-5 h-5 rounded-full bg-white text-[#0B0E17] flex items-center justify-center text-[10px] group-hover:translate-x-1 transition-transform">
+          <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button id="mobile-menu-btn" onclick="toggleMobileNav()" aria-label="Toggle Mobile Menu" class="lg:hidden w-11 h-11 flex flex-col items-center justify-center gap-1.5 rounded-lg bg-[#131824] border border-white/10 text-white focus:outline-none">
+        <span class="w-5 h-[2px] bg-white transition-all"></span>
+        <span class="w-5 h-[2px] bg-[#F97316] transition-all"></span>
+        <span class="w-5 h-[2px] bg-white transition-all"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Fullscreen Dropdown Menu -->
+  <div id="mobile-nav-overlay" class="fixed inset-0 z-40 bg-[#0B0E17]/95 backdrop-blur-2xl flex flex-col justify-between p-8 pt-28 -translate-y-full transition-transform duration-500 ease-in-out lg:hidden">
+    <div class="flex flex-col gap-6">
+      <p class="font-mono text-xs tracking-[0.3em] text-[#F97316] uppercase">NAVIGATION</p>
+      <a href="#movement" onclick="toggleMobileNav(false)" class="headline-bebas text-4xl text-white hover:text-[#F97316] transition-colors">01 THE MOVEMENT.</a>
+      <a href="#coaches" onclick="toggleMobileNav(false)" class="headline-bebas text-4xl text-white hover:text-[#F97316] transition-colors">02 COACHES ROSTER.</a>
+      <a href="#tracks" onclick="toggleMobileNav(false)" class="headline-bebas text-4xl text-white hover:text-[#F97316] transition-colors">03 TRAINING TRACKS.</a>
+      <a href="#archive" onclick="toggleMobileNav(false)" class="headline-bebas text-4xl text-white hover:text-[#F97316] transition-colors">04 VISUAL ARCHIVE.</a>
+      <a href="#vip-voices" onclick="toggleMobileNav(false)" class="headline-bebas text-4xl text-white hover:text-[#F97316] transition-colors">05 VIP VOICES.</a>
+      <a href="#booker" onclick="toggleMobileNav(false)" class="headline-bebas text-4xl text-[#F97316] hover:text-white transition-colors">06 BOOK YOUR TRIAL.</a>
+    </div>
+    <div class="border-t border-white/10 pt-6 flex flex-col gap-3 font-mono text-xs text-slate-400">
+      <div class="flex items-center justify-between">
+        <span>MRC NAGAR, CHENNAI</span>
+        <span class="text-[#F97316]">6:00 AM — 9:00 PM</span>
+      </div>
+      <a href="https://wa.me/919384207764" target="_blank" class="text-white hover:text-[#F97316] transition-colors">
+        <i class="fa-brands fa-whatsapp text-[#F97316] mr-2"></i>+91 9384207764
+      </a>
+    </div>
+  </div>
+
+  <!-- ================================================== -->
+  <!-- 2. HERO SECTION (Clear, Bright, Vibrant Video)     -->
+  <!-- ================================================== -->
+  <section id="hero" class="sticky top-0 z-0 h-[100svh] w-full overflow-hidden flex flex-col justify-between">
+    <!-- Video Background (Clear, bright, fully visible) -->
+    <div class="absolute inset-0 z-0">
+      <video id="hero-video" class="w-full h-full object-cover" autoplay loop muted playsinline webkit-playsinline poster="HYROX2.png">
+        <source src="momentum_lanidng_video.mp4" type="video/mp4" />
+      </video>
+      <!-- Subtle legibility gradients strictly behind top nav and bottom marquee without dimming the video -->
+      <div class="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#0B0E17]/45 to-transparent pointer-events-none z-10"></div>
+      <div class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#0B0E17]/50 to-transparent pointer-events-none z-10"></div>
+    </div>
+
+    <!-- Main Hero Top-Left Content Stack -->
+    <div id="hero-content" class="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-8 md:px-12 pt-28 sm:pt-32 md:pt-36 flex-1 flex flex-col justify-center">
+      <!-- Tiny label -->
+      <div class="flex items-center gap-3 mb-4">
+        <span class="w-2 h-2 rounded-full bg-[#F97316] shadow-[0_0_10px_#F97316]"></span>
+        <span class="font-mono text-xs sm:text-sm tracking-[0.35em] uppercase text-slate-200 drop-shadow">
+          PERFORMANCE STUDIO | 001
+        </span>
+      </div>
+
+      <!-- Giant 2-Line Headline -->
+      <h1 class="headline-bebas text-5xl sm:text-7xl md:text-8xl lg:text-[11vw] xl:text-[12vw] tracking-tight text-white mb-2 leading-[0.88] drop-shadow-lg">
+        <div class="mask-wrap"><span class="mask-line">WE MOVE</span></div>
+        <div class="mask-wrap"><span class="mask-line">WITH MOMENTUM<span class="dot">.</span></span></div>
+      </h1>
+
+      <!-- 2-Line Subtitle -->
+      <h2 class="headline-bebas text-2xl sm:text-3xl md:text-5xl text-[#F97316] tracking-wide mb-5 drop-shadow">
+        EMPOWERING EVERY GENERATION<span class="dot">.</span>
+      </h2>
+
+      <!-- 3-line paragraph -->
+      <p class="max-w-xl text-slate-200 text-sm sm:text-base leading-relaxed font-light mb-8 drop-shadow">
+        Sports science meets relentless hybrid conditioning. Chennai's premier HYROX-affiliated performance facility, India's first independent VALD technology pioneer, engineered for athletes, youth, and everyday humans.
+      </p>
+
+      <!-- CTA Button -->
+      <div>
+        <a href="#movement" class="btn-orange px-7 py-4 rounded-full text-xs sm:text-sm tracking-wider group min-h-[48px]">
+          <span>EXPLORE THE STUDIO</span>
+          <span class="btn-circle-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom Info Stack -->
+    <div id="hero-bottom-info" class="relative z-20 max-w-7xl mx-auto w-full px-4 sm:px-8 md:px-12 pb-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+      <div class="hidden md:block bg-[#0B0E17]/60 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10">
+        <span class="font-mono text-[10px] tracking-[0.3em] uppercase text-slate-300 block mb-0.5">CO-FOUNDED BY AKKIL SRINATH</span>
+        <span class="font-mono text-xs text-[#F97316] font-bold tracking-wider">MSc S&C (UK) · EX-FULHAM FC S&C</span>
+      </div>
+
+      <!-- Right Info Stack -->
+      <div class="flex items-center gap-6 self-end md:self-auto bg-[#131824]/85 backdrop-blur-md px-5 py-3.5 rounded-2xl border border-white/10 shadow-2xl">
+        <div class="text-right font-mono text-[11px] sm:text-xs text-slate-300 tracking-wider">
+          <div class="text-white font-bold">MOMENTUM STUDIO</div>
+          <div class="text-slate-400">MRC NAGAR / CHENNAI — 600028</div>
+          <div class="text-[#F97316] font-bold">6:00 AM — 9:00 PM</div>
+        </div>
+
+        <!-- Pause/Play Video Button -->
+        <button id="video-toggle-btn" onclick="toggleHeroVideo()" aria-label="Toggle Video Playback" class="w-11 h-11 rounded-full border border-[#F97316] bg-[#0B0E17]/80 text-[#F97316] flex items-center justify-center text-sm shadow-[0_0_15px_rgba(249,115,22,0.4)] hover:scale-105 active:scale-95 transition-all">
+          <i id="video-toggle-icon" class="fa-solid fa-pause"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom Edge: Glass Marquee Band -->
+    <div id="hero-marquee" class="relative z-20 w-full overflow-hidden bg-[#131824]/90 backdrop-blur-md border-y border-white/[0.08] py-3.5">
+      <div class="animate-marquee font-mono text-xs sm:text-sm tracking-[0.25em] uppercase text-slate-300 flex items-center gap-6">
+        <span>✱ MOMENTUM</span>
+        <span class="text-white font-bold">✱ STRENGTH</span>
+        <span class="text-[#F97316] font-bold drop-shadow-[0_0_8px_#F97316]">✱ HYROX AFFILIATED</span>
+        <span>✱ HYBRID ENDURANCE</span>
+        <span>✱ YOUTH LTAD</span>
+        <span class="text-[#F97316] font-bold">✱ VALD TESTING</span>
+        <span>✱ PHYSIO REHAB</span>
+        <span>✱ CUSTOM NUTRITION</span>
+        <span>✱ MOMENTUM</span>
+        <span class="text-white font-bold">✱ STRENGTH</span>
+        <span class="text-[#F97316] font-bold drop-shadow-[0_0_8px_#F97316]">✱ HYROX AFFILIATED</span>
+        <span>✱ HYBRID ENDURANCE</span>
+        <span>✱ YOUTH LTAD</span>
+        <span class="text-[#F97316] font-bold">✱ VALD TESTING</span>
+        <span>✱ PHYSIO REHAB</span>
+        <span>✱ CUSTOM NUTRITION</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 3. "01 THE MOVEMENT" (Solid curtain over hero)     -->
+  <!-- ================================================== -->
+  <section id="movement" class="relative z-10 bg-[#0B0E17] pt-28 pb-28 sm:pb-36 border-t border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+      <!-- Eyebrow -->
+      <div class="flex items-center gap-3 mb-8">
+        <span class="w-8 h-[2px] bg-[#F97316]"></span>
+        <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">01 · THE MOVEMENT</span>
+      </div>
+
+      <!-- 3-Column Grid Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-start">
+        
+        <!-- Left: 4-Line Giant Headline -->
+        <div class="lg:col-span-5">
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-white leading-[0.9]">
+            <div class="mask-wrap"><span class="mask-line">WE DON'T</span></div>
+            <div class="mask-wrap"><span class="mask-line">JUST TRAIN,</span></div>
+            <div class="mask-wrap"><span class="mask-line">WE BUILD</span></div>
+            <div class="mask-wrap"><span class="mask-line text-[#F97316]">MOMENTUM<span class="dot">.</span></span></div>
+          </h2>
+        </div>
+
+        <!-- Middle Column: Condensed Paragraph + VALD Feature -->
+        <div class="lg:col-span-3 flex flex-col justify-between h-full pt-2">
+          <div class="space-y-5 text-slate-300 text-sm leading-relaxed">
+            <p>
+              We reject generic fitness gimmicks and uncalibrated sweat sessions. At Momentum, human performance is engineered through empirical sports science, VALD force plate and dynamometer diagnostic data, and progressive overload.
+            </p>
+            <p>
+              Whether you are preparing for a grueling HYROX race, elevating athletic durability, or rehabilitating acute strain, every rep is backed by elite coaching methodology.
+            </p>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-white/10 font-mono text-xs">
+            <div class="text-[#F97316] font-bold tracking-widest uppercase mb-1">INDIA'S VALD PIONEER</div>
+            <p class="text-slate-400 text-[11px] leading-relaxed">
+              Co-founded by Akkil Srinath — India's 1st independent professional to introduce VALD Performance Testing Technology.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Column: Tall Photo with Clean Natural Color Reveal -->
+        <div class="lg:col-span-4">
+          <div id="movement-photo-wrap" class="clean-image-card rounded-2xl overflow-hidden aspect-[3/4.2] relative shadow-2xl border border-white/10 group cursor-pointer">
+            <img id="movement-photo" src="HYROX7.png" alt="Momentum Floor Training" onerror="handleImgError(this, 'THE MOVEMENT')" class="w-full h-full object-cover" />
+            <!-- Bottom Overlay Caption -->
+            <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/80 to-transparent z-10">
+              <span class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#F97316] block mb-1">STANDARDS</span>
+              <p class="font-bebas text-lg tracking-wider text-white">
+                THIS IS MOMENTUM — BUILT FOR THE FLOOR, MADE FOR THE MOMENT<span class="text-[#F97316]">.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 4. "02 NEXT SESSION"                               -->
+  <!-- ================================================== -->
+  <section id="next-session" class="relative z-10 bg-[#0B0E17] py-24 border-t border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+      <!-- Eyebrow -->
+      <div class="flex items-center gap-3 mb-8">
+        <span class="w-8 h-[2px] bg-[#F97316]"></span>
+        <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">02 · NEXT SESSION</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <!-- Left Column: Headline + Ticket Card -->
+        <div class="lg:col-span-7 flex flex-col gap-8">
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-7xl text-white">
+            THE NEXT SESSION AWAITS<span class="dot">.</span>
+          </h2>
+
+          <!-- Ticket Card -->
+          <div class="relative bg-gradient-to-br from-[#131824] via-[#151C2E] to-[#131824] rounded-3xl p-6 sm:p-8 border border-[#F97316]/30 shadow-[0_0_40px_rgba(249,115,22,0.15)] overflow-hidden">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-white/10">
+              <div>
+                <span class="font-mono text-xs tracking-[0.3em] uppercase text-slate-400">PASSPORT // ALL-ACCESS</span>
+                <div class="headline-bebas text-5xl sm:text-6xl text-[#F97316] tracking-wider leading-none drop-shadow-[0_0_20px_rgba(249,115,22,0.5)]">
+                  MOMENTUM 001
+                </div>
+              </div>
+              <!-- Vertical-bar barcode -->
+              <div class="w-32 h-14 ticket-barcode opacity-70 rounded"></div>
+            </div>
+
+            <!-- 4-Cell Row of Label/Value Pairs -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 py-6 border-b border-white/10 font-mono text-xs">
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-widest">DAYS</span>
+                <span class="text-white font-bold text-sm">Mon–Fri</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-widest">WEEKEND</span>
+                <span class="text-white font-bold text-sm">Flexible</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-widest">LOCATION</span>
+                <span class="text-[#F97316] font-bold text-sm">MRC Nagar</span>
+              </div>
+              <div>
+                <span class="text-slate-400 block text-[10px] uppercase tracking-widest">HOURS</span>
+                <span class="text-white font-bold text-sm">6 AM – 9 PM</span>
+              </div>
+            </div>
+
+            <!-- Card Bottom Row -->
+            <div class="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <p class="font-mono text-xs tracking-wider text-slate-300">
+                "One studio. Nine coaches. No excuses."
+              </p>
+              <a href="#booker" class="btn-orange px-6 py-3 rounded-full text-xs tracking-widest min-h-[44px]">
+                <span>BOOK YOUR TRIAL</span>
+                <span class="btn-circle-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Wide Rounded Photo with Clean Natural Color Reveal -->
+        <div class="lg:col-span-5 relative">
+          <div class="clean-image-card rounded-3xl overflow-hidden aspect-[4/3.8] border border-white/10 shadow-2xl relative group cursor-pointer">
+            <img src="HYROX1.png" alt="HYROX Training Session" onerror="handleImgError(this, 'SESSION 001')" class="w-full h-full object-cover" />
+            <!-- Big Ghost Number 001 -->
+            <div class="absolute top-2 right-4 headline-bebas text-8xl text-white/10 pointer-events-none select-none">
+              001
+            </div>
+            <!-- Bottom tag -->
+            <div class="absolute bottom-5 left-5 z-10 bg-[#0B0E17]/80 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 font-mono text-xs text-white">
+              <span class="text-[#F97316] font-bold">HYROX RACE PREP</span> · CHENNAI
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 5. "03 LINEUP" — MEET THE COACHES. (9 Coaches)     -->
+  <!-- ================================================== -->
+  <section id="coaches" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mb-10">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-[2px] bg-[#F97316]"></span>
+            <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">03 · LINEUP</span>
+          </div>
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-8xl text-white">
+            MEET THE COACHES<span class="dot">.</span>
+          </h2>
+        </div>
+
+        <!-- Counter & Navigation Arrow Buttons -->
+        <div class="flex items-center gap-4">
+          <div class="font-mono text-sm tracking-widest text-slate-300">
+            <span id="lineup-active-index" class="text-2xl font-bold text-[#F97316]">01</span>
+            <span class="text-slate-600">/</span>
+            <span>09</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="scrollLineup(-1)" aria-label="Previous Coach" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
+              <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <button onclick="scrollLineup(1)" aria-label="Next Coach" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flush Horizontal Carousel of 9 Coaches (Smooth Gliding & Drag) -->
+    <div class="w-full overflow-x-auto smooth-horizontal-scroll select-none cursor-grab active:cursor-grabbing" id="lineup-scroll-container">
+      <div id="coaches-track" class="flex gap-4 px-4 sm:px-8 md:px-12 w-max">
+        <!-- Coach cards will be injected by JavaScript using COACHES array -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 6. "04 THE NIGHTS" → TRAINING WE STAND BEHIND      -->
+  <!-- ================================================== -->
+  <section id="tracks" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+      <!-- Header Row -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-[2px] bg-[#F97316]"></span>
+            <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">04 · PROGRAMS</span>
+          </div>
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-8xl text-white">
+            TRAINING WE STAND BEHIND<span class="dot">.</span>
+          </h2>
+        </div>
+        <div class="max-w-md">
+          <p class="text-slate-300 text-sm leading-relaxed mb-4">
+            Six disciplined performance pillars designed around sport science, motor learning, and metabolic durability.
+          </p>
+          <a href="#booker" class="btn-orange px-5 py-2.5 rounded-full text-xs tracking-wider min-h-[44px]">
+            <span>VIEW THE TRACKS</span>
+            <span class="btn-circle-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Stacking Track Cards Container -->
+      <div id="stacking-cards-container" class="relative flex flex-col gap-8 pb-12">
+        <!-- 6 Stacking Cards generated from TRACKS array -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 7. "05 VISUAL ARCHIVE" — THROUGH OUR LENS.         -->
+  <!-- ================================================== -->
+  <section id="archive" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06] overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mb-12">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-[2px] bg-[#F97316]"></span>
+            <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">05 · VISUAL ARCHIVE</span>
+          </div>
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-8xl text-white">
+            THROUGH OUR LENS<span class="dot">.</span>
+          </h2>
+        </div>
+        <p class="font-mono text-xs sm:text-sm text-slate-300 tracking-[0.25em] uppercase max-w-md text-left md:text-right leading-relaxed font-bold">
+          THE SWEAT. THE DATA. THE REPS. THE MOMENTS ON THE FLOOR.
+        </p>
+      </div>
+    </div>
+
+    <!-- Horizontal Staggered Visual Row with Gliding -->
+    <div id="archive-scroll-container" class="w-full overflow-x-auto smooth-horizontal-scroll select-none cursor-grab active:cursor-grabbing pb-6">
+      <div id="archive-track" class="flex gap-6 px-4 sm:px-8 md:px-12 w-max items-start">
+        <!-- Injected via ARCHIVE data -->
+      </div>
+    </div>
+
+    <!-- Bottom Progress Bar for Archive -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mt-6 flex items-center justify-between gap-6">
+      <div class="w-full h-[2px] bg-white/10 rounded-full overflow-hidden">
+        <div id="archive-progress-bar" class="h-full bg-[#F97316] w-0 transition-all duration-150"></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="scrollArchive(-1)" aria-label="Archive Previous" class="w-10 h-10 rounded-lg bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center text-xs min-h-[44px] min-w-[44px]">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <button onclick="scrollArchive(1)" aria-label="Archive Next" class="w-10 h-10 rounded-lg bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center text-xs min-h-[44px] min-w-[44px]">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 8. "06 ABOUT" — THIS IS MOMENTUM.                  -->
+  <!-- ================================================== -->
+  <section id="about" class="relative z-10 bg-[#0B0E17] py-32 border-t border-white/[0.06] overflow-hidden">
+    <!-- High-Visibility Photo Behind (HYROX2.png, 65% opacity, fully visible human studio floor action) -->
+    <div class="absolute inset-0 z-0">
+      <img src="HYROX2.png" alt="Momentum Studio Floor" onerror="handleImgError(this, 'MOMENTUM')" class="w-full h-full object-cover filter contrast-125 brightness-95 opacity-65" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/50 to-[#0B0E17]/60 pointer-events-none"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+      <!-- Eyebrow -->
+      <div class="flex items-center gap-3 mb-8">
+        <span class="w-8 h-[2px] bg-[#F97316]"></span>
+        <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">06 · ABOUT</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start mb-20">
+        <!-- Left: Headline + Paragraph -->
+        <div class="lg:col-span-7">
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-8xl text-white mb-6">
+            THIS IS MOMENTUM<span class="dot">.</span>
+          </h2>
+          <div class="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed max-w-xl">
+            <p>
+              Momentum Studio was founded on a singular premise: world-class strength and conditioning should not be reserved only for European professional clubs or Olympic athletes.
+            </p>
+            <p>
+              Situated directly above Starbucks in MRC Nagar, Chennai, we combine European football academy S&C rigor with cutting-edge VALD diagnostic technology to build resilient, powerful human beings across all age brackets.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Right-aligned Glowing Mantra -->
+        <div class="lg:col-span-5 text-left lg:text-right">
+          <h3 class="headline-bebas text-4xl sm:text-5xl md:text-6xl text-[#F97316] leading-none drop-shadow-[0_0_25px_rgba(249,115,22,0.6)] mb-4">
+            NO EXCUSES.<br />NO SHORTCUTS.<br />NO LIMITS<span class="dot">.</span>
+          </h3>
+          <p class="font-mono text-xs text-slate-400 tracking-wider max-w-md ml-auto">
+            Chennai's highest standard for athletic transformation. Built for the floor, made for the moment.
+          </p>
+        </div>
+      </div>
+
+      <!-- 3 Huge Orange Count-Up Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 border-t border-white/10">
+        <div class="bg-[#131824]/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10">
+          <div class="headline-bebas text-6xl sm:text-7xl md:text-8xl text-[#F97316] leading-none mb-2">
+            <span class="counter-number" data-target="100">0</span><span class="text-white">%</span>
+          </div>
+          <span class="font-mono text-xs tracking-[0.25em] text-white uppercase block mb-1">RESEARCH-BACKED S&C</span>
+          <span class="text-xs text-slate-400">Sports science periodization engineered for true human performance.</span>
+        </div>
+
+        <div class="bg-[#131824]/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10">
+          <div class="headline-bebas text-6xl sm:text-7xl md:text-8xl text-[#F97316] leading-none mb-2">
+            <span>1</span><span class="text-3xl sm:text-4xl text-white ml-1 font-mono">ST</span>
+          </div>
+          <span class="font-mono text-xs tracking-[0.25em] text-white uppercase block mb-1">VALD PIONEER IN INDIA</span>
+          <span class="text-xs text-slate-400">Independent technology leader in clinical sports diagnostics.</span>
+        </div>
+
+        <div class="bg-[#131824]/80 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10">
+          <div class="headline-bebas text-6xl sm:text-7xl md:text-8xl text-[#F97316] leading-none mb-2">
+            <span class="counter-number" data-target="500">0</span><span class="text-white">+</span>
+          </div>
+          <span class="font-mono text-xs tracking-[0.25em] text-white uppercase block mb-1">ATHLETES TRANSFORMED</span>
+          <span class="text-xs text-slate-400">From youth & national athletes to everyday humans getting stronger.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 9. VIP VOICES (Horizontal Gliding & Modal)         -->
+  <!-- ================================================== -->
+  <section id="vip-voices" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-[2px] bg-[#F97316]"></span>
+            <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">VIP VOICES</span>
+          </div>
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-8xl text-white">
+            WORDS FROM THE FLOOR<span class="dot">.</span>
+          </h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="scrollVoices(-1)" aria-label="Previous Testimonial" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <button onclick="scrollVoices(1)" aria-label="Next Testimonial" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal Gliding Track for Testimonials -->
+    <div class="w-full overflow-x-auto smooth-horizontal-scroll select-none cursor-grab active:cursor-grabbing pb-6" id="voices-scroll-container">
+      <div id="voices-track" class="flex gap-6 px-4 sm:px-8 md:px-12 w-max">
+        <!-- Rendered dynamically from VIP_VOICES array -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 10. "08 THE BELIEF" (Team Photo Full Backdrop)     -->
+  <!-- ================================================== -->
+  <section id="belief" class="relative z-10 bg-[#0B0E17] min-h-[85vh] flex flex-col justify-end p-6 sm:p-12 md:p-16 border-t border-white/[0.06] overflow-hidden">
+    <!-- Atmospheric Photo Behind: TEAM MEMBERS.png (Coach Akkil centered at 15%, 100% visible face) -->
+    <div class="absolute inset-0 z-0">
+      <img src="TEAM%20MEMBERS.png" alt="Momentum Team Members" onerror="handleImgError(this, 'TEAM MEMBERS')" class="w-full h-full object-cover filter contrast-115 brightness-95 opacity-85" style="object-position: center 15% !important;" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/40 to-transparent pointer-events-none"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto w-full">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-8 h-[2px] bg-[#F97316]"></span>
+        <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">08 · THE BELIEF</span>
+      </div>
+
+      <!-- Main Title Strictly on ONE Single Line without awkward breaking -->
+      <h2 class="headline-bebas text-[clamp(1.75rem,5.6vw,6.5rem)] text-white whitespace-nowrap overflow-hidden text-ellipsis leading-tight mb-8">
+        PERFORMANCE BELONGS TO EVERYONE<span class="dot">.</span>
+      </h2>
+
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="#coaches" class="btn-orange px-8 py-4 rounded-full text-xs sm:text-sm tracking-wider min-h-[48px]">
+          <span>MEET THE COACHES</span>
+          <span class="btn-circle-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        <a href="#booker" class="px-8 py-4 rounded-full bg-[#1A2234] hover:bg-[#242F46] border border-white/10 text-white font-mono text-xs sm:text-sm tracking-wider uppercase transition-all flex items-center gap-2 group min-h-[48px]">
+          <span>BOOK TRIAL</span>
+          <span class="w-5 h-5 rounded-full bg-white text-[#0B0E17] flex items-center justify-center text-[10px] group-hover:translate-x-1 transition-transform">
+            <i class="fa-solid fa-arrow-right"></i>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 11. TRIAL BOOKER                                   -->
+  <!-- ================================================== -->
+  <section id="booker" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <!-- Left Column: Headline & Information -->
+        <div class="lg:col-span-5">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-8 h-[2px] bg-[#F97316]"></span>
+            <span class="font-mono text-xs tracking-[0.3em] uppercase text-[#F97316] font-bold">RESERVATION</span>
+          </div>
+          <h2 class="headline-bebas text-5xl sm:text-6xl md:text-7xl text-white mb-6">
+            BOOK YOUR TRIAL<span class="dot">.</span>
+          </h2>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-8">
+            Experience our MRC Nagar floor firsthand. Select your preferred day and time slot, enter your name, and send your booking enquiry directly to our team via WhatsApp.
+          </p>
+
+          <div class="space-y-4 font-mono text-xs border-t border-white/10 pt-6">
+            <div class="flex items-center gap-3 text-slate-300">
+              <i class="fa-solid fa-clock text-[#F97316] w-4"></i>
+              <span>Mon–Fri 6:00 AM – 9:00 PM · Sat–Sun flexible</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <i class="fa-solid fa-location-dot text-[#F97316] w-4"></i>
+              <span>57, Second Floor, Sathyadev Ave, MRC Nagar (above Starbucks)</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-300">
+              <i class="fa-brands fa-whatsapp text-[#F97316] w-4"></i>
+              <span>WhatsApp: +91 9384207764</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive Booking Card -->
+        <div class="lg:col-span-7">
+          <div class="bg-[#131824] rounded-3xl p-6 sm:p-10 border border-[#F97316]/30 shadow-[0_0_35px_rgba(249,115,22,0.12)]">
+            <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-6">
+              <!-- Day Toggle -->
+              <div>
+                <label class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2">Select Day</label>
+                <div class="grid grid-cols-2 gap-3" id="booking-days">
+                  <button type="button" onclick="selectBookingDay('WEEKDAY', this)" class="booking-day-btn active py-3.5 rounded-xl border border-[#F97316] bg-[#F97316] text-[#0B0E17] font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(249,115,22,0.4)] min-h-[48px]">
+                    WEEKDAY
+                  </button>
+                  <button type="button" onclick="selectBookingDay('WEEKEND', this)" class="booking-day-btn py-3.5 rounded-xl border border-white/10 bg-[#0B0E17] text-white hover:border-[#F97316]/50 font-mono text-xs font-bold uppercase tracking-wider transition-all min-h-[48px]">
+                    WEEKEND
+                  </button>
+                </div>
+              </div>
+
+              <!-- Time Slot Buttons -->
+              <div>
+                <label class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2">Preferred Slot</label>
+                <div class="grid grid-cols-3 gap-3" id="booking-slots">
+                  <button type="button" onclick="selectBookingSlot('10:00 AM', this)" class="booking-slot-btn active py-3.5 rounded-xl border border-[#F97316] bg-[#F97316] text-[#0B0E17] font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(249,115,22,0.4)] min-h-[48px]">
+                    10:00 AM
+                  </button>
+                  <button type="button" onclick="selectBookingSlot('05:00 PM', this)" class="booking-slot-btn py-3.5 rounded-xl border border-white/10 bg-[#0B0E17] text-white hover:border-[#F97316]/50 font-mono text-xs font-bold uppercase tracking-wider transition-all min-h-[48px]">
+                    05:00 PM
+                  </button>
+                  <button type="button" onclick="selectBookingSlot('07:00 PM', this)" class="booking-slot-btn py-3.5 rounded-xl border border-white/10 bg-[#0B0E17] text-white hover:border-[#F97316]/50 font-mono text-xs font-bold uppercase tracking-wider transition-all min-h-[48px]">
+                    07:00 PM
+                  </button>
+                </div>
+              </div>
+
+              <!-- Name Input -->
+              <div>
+                <label for="booking-name" class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2">Your Full Name *</label>
+                <input type="text" id="booking-name" required placeholder="e.g. Rahul Sharma" class="w-full bg-[#0B0E17] border border-white/10 focus:border-[#F97316] rounded-xl px-4 py-3.5 text-white font-mono text-sm placeholder:text-slate-600 focus:outline-none transition-colors min-h-[48px]" />
+                <span id="name-error" class="hidden text-xs font-mono text-[#E11D48] mt-1">Please enter your name.</span>
+              </div>
+
+              <!-- Goal Select -->
+              <div>
+                <label for="booking-goal" class="block font-mono text-xs uppercase tracking-widest text-slate-400 mb-2">Primary Fitness Objective</label>
+                <select id="booking-goal" class="w-full bg-[#0B0E17] border border-white/10 focus:border-[#F97316] rounded-xl px-4 py-3.5 text-white font-mono text-sm focus:outline-none transition-colors min-h-[48px]">
+                  <option value="HYROX Affiliated Race Prep">HYROX Affiliated Race Prep</option>
+                  <option value="Strength & Conditioning">Strength & Conditioning</option>
+                  <option value="Hybrid Endurance (Stride running)">Hybrid Endurance (Stride running)</option>
+                  <option value="VALD Performance Testing">VALD Performance Testing</option>
+                  <option value="Youth LTAD Athletic Development">Youth LTAD Athletic Development</option>
+                  <option value="Physio & Sports Rehabilitation">Physio & Sports Rehabilitation</option>
+                  <option value="Custom Vegan / Vegetarian Nutrition">Custom Vegan / Vegetarian Nutrition</option>
+                </select>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="w-full btn-orange py-4 rounded-xl text-sm tracking-widest font-bold flex items-center justify-center gap-3 min-h-[48px]">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>SEND ON WHATSAPP</span>
+                <span class="btn-circle-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================== -->
+  <!-- 12. FOOTER (Gliding Ghost Text & Single-Line Logo) -->
+  <!-- ================================================== -->
+  <footer class="relative z-10 bg-[#0B0E17] border-t border-white/[0.08] pt-20 pb-12 overflow-hidden">
+    <!-- Continuously Gliding Ghost Wordmark in background -->
+    <div class="absolute inset-x-0 bottom-4 pointer-events-none select-none overflow-hidden opacity-15 z-0">
+      <div class="animate-footer-ghost flex whitespace-nowrap">
+        <span class="headline-bebas text-[15vw] text-transparent tracking-widest mr-16" style="-webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.65);">MOMENTUM STUDIO · EMPOWERING EVERY GENERATION · </span>
+        <span class="headline-bebas text-[15vw] text-transparent tracking-widest mr-16" style="-webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.65);">MOMENTUM STUDIO · EMPOWERING EVERY GENERATION · </span>
+      </div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 md:px-12">
+      <!-- Top Row: Single-Line Title and Links strictly on ONE line (Pic 6) -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-14 border-b border-white/10">
+        <h2 class="headline-bebas text-3xl sm:text-5xl md:text-6xl text-white tracking-widest whitespace-nowrap overflow-hidden text-ellipsis leading-none">
+          MOMENTUM STUDIO<span class="text-[#F97316]">.</span>
+        </h2>
+        <div class="headline-bebas text-xl sm:text-2xl md:text-3xl flex flex-wrap items-center gap-3 sm:gap-6 tracking-wider whitespace-nowrap">
+          <a href="#tracks" class="hover:text-[#F97316] transition-colors">STRENGTH</a>
+          <span class="text-slate-600">·</span>
+          <a href="#tracks" class="hover:text-[#F97316] transition-colors">ENDURANCE</a>
+          <span class="text-slate-600">·</span>
+          <a href="#tracks" class="text-[#F97316] drop-shadow-[0_0_12px_rgba(249,115,22,0.8)] hover:text-white transition-colors">HYROX</a>
+          <span class="text-slate-600">·</span>
+          <a href="#tracks" class="hover:text-[#F97316] transition-colors">YOUTH</a>
+        </div>
+      </div>
+
+      <!-- 4 Columns Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-16 border-b border-white/10 font-mono text-xs">
+        
+        <!-- Column 1: Navigation -->
+        <div>
+          <span class="text-[#F97316] uppercase tracking-[0.3em] font-bold block mb-5">NAVIGATION</span>
+          <ul class="space-y-3 text-slate-300">
+            <li><a href="#movement" class="hover:text-[#F97316] transition-colors">About Studio</a></li>
+            <li><a href="#coaches" class="hover:text-[#F97316] transition-colors">Coaching Roster</a></li>
+            <li><a href="#tracks" class="hover:text-[#F97316] transition-colors">Performance Programs</a></li>
+            <li><a href="#archive" class="hover:text-[#F97316] transition-colors">Visual Archive</a></li>
+            <li><a href="#vip-voices" class="hover:text-[#F97316] transition-colors">VIP Voices</a></li>
+            <li><a href="#booker" class="hover:text-[#F97316] transition-colors">Book Free Trial</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Social & Contact -->
+        <div>
+          <span class="text-[#F97316] uppercase tracking-[0.3em] font-bold block mb-5">CONNECT</span>
+          <ul class="space-y-3 text-slate-300">
+            <li>
+              <a href="https://wa.me/919384207764" target="_blank" class="hover:text-[#F97316] transition-colors flex items-center gap-2.5">
+                <i class="fa-brands fa-whatsapp text-[#F97316]"></i> WhatsApp +91 9384207764
+              </a>
+            </li>
+            <li>
+              <a href="mailto:momentumstudio.m@gmail.com" class="hover:text-[#F97316] transition-colors flex items-center gap-2.5">
+                <i class="fa-solid fa-envelope text-[#F97316]"></i> momentumstudio.m@gmail.com
+              </a>
+            </li>
+            <li>
+              <a href="https://www.google.com/maps/search/?api=1&query=Momentum+Studio+Sathyadev+Avenue+MRC+Nagar+Chennai+600028" target="_blank" class="hover:text-[#F97316] transition-colors flex items-center gap-2.5">
+                <i class="fa-solid fa-location-arrow text-[#F97316]"></i> Open in Google Maps
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Location Graphic & Hours -->
+        <div>
+          <span class="text-[#F97316] uppercase tracking-[0.3em] font-bold block mb-5">03 / LOCATION</span>
+          <p class="text-white leading-relaxed mb-3">
+            57, Second Floor, Sathyadev Avenue, MRC Nagar, Raja Annamalai, Chennai – 600028<br />
+            <span class="text-[#F97316] font-bold">(Above Starbucks)</span>
+          </p>
+          <p class="text-slate-400 mb-4">
+            Mon–Fri: 6:00 AM – 9:00 PM<br />
+            Sat–Sun: Flexible Sessions
+          </p>
+          <!-- Dotted graphic with glowing pin -->
+          <div class="h-16 w-full rounded-xl bg-[#131824] border border-white/10 relative flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#FFF 1px, transparent 1px); background-size: 8px 8px;"></div>
+            <div class="flex items-center gap-2 relative z-10 text-[#F97316]">
+              <span class="w-3 h-3 rounded-full bg-[#F97316] animate-ping"></span>
+              <span class="font-bold text-[11px] tracking-wider text-white">MRC NAGAR PIN</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 4: Stay in the loop -->
+        <div>
+          <span class="text-[#F97316] uppercase tracking-[0.3em] font-bold block mb-5">STAY IN THE LOOP</span>
+          <p class="text-slate-400 mb-4 leading-relaxed">
+            Get early access to HYROX simulation days, Stride run club schedules, and sport science workshops.
+          </p>
+          <form onsubmit="handleLoopSubmit(event)" class="flex items-center gap-2">
+            <input type="email" id="loop-email" required placeholder="name@email.com" class="w-full bg-[#131824] border border-white/10 focus:border-[#F97316] rounded-xl px-3.5 py-2.5 text-white font-mono text-xs focus:outline-none transition-colors min-h-[44px]" />
+            <button type="submit" class="btn-orange px-4 py-2.5 rounded-xl text-xs font-bold min-h-[44px]">JOIN</button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Ticket Card Straddling the Bottom -->
+      <div class="my-14 bg-gradient-to-r from-[#131824] via-[#1A2234] to-[#131824] rounded-3xl border border-white/10 relative overflow-hidden shadow-2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 items-center">
+          
+          <!-- Left Ticket Pass -->
+          <div class="lg:col-span-8 p-6 sm:p-10">
+            <div class="flex items-center gap-3 font-mono text-[11px] tracking-[0.3em] text-[#F97316] uppercase mb-2">
+              <span>MOMENTUM</span>
+              <span>·</span>
+              <span>ADMIT ONE</span>
+              <span>·</span>
+              <span>VIP PASS</span>
+            </div>
+            <h3 class="headline-bebas text-3xl sm:text-4xl text-white mb-2">
+              EMPOWERING EVERY GENERATION<span class="dot">.</span>
+            </h3>
+            <p class="text-slate-300 text-xs sm:text-sm font-mono leading-relaxed mb-6">
+              57, Second Floor, Sathyadev Avenue, MRC Nagar, Chennai – 600028 (above Starbucks)<br />
+              WhatsApp / Phone: +91 9384207764 · Email: momentumstudio.m@gmail.com
+            </p>
+            <a href="https://www.google.com/maps/search/?api=1&query=Momentum+Studio+Sathyadev+Avenue+MRC+Nagar+Chennai+600028" target="_blank" class="btn-orange px-6 py-2.5 rounded-full text-xs min-h-[44px]">
+              <span>OPEN IN MAPS</span>
+              <span class="btn-circle-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+          </div>
+
+          <!-- Perforated Divider (hidden on small screens) -->
+          <div class="hidden lg:flex flex-col items-center justify-between h-48 border-l border-dashed border-white/20 relative">
+            <div class="w-6 h-6 rounded-full bg-[#0B0E17] absolute -top-3 -left-3"></div>
+            <div class="w-6 h-6 rounded-full bg-[#0B0E17] absolute -bottom-3 -left-3"></div>
+          </div>
+
+          <!-- Right Ticket Barcode & Serial -->
+          <div class="lg:col-span-4 p-6 sm:p-10 flex flex-col items-center justify-center text-center">
+            <div class="w-48 h-14 ticket-barcode opacity-80 mb-3 rounded"></div>
+            <span class="font-mono text-xs tracking-[0.3em] text-slate-400">MMTM-2026-VIP</span>
+            <span class="font-mono text-[10px] text-[#F97316] tracking-widest mt-1">OFFICIAL ACCESS TICKET</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-500 pt-6">
+        <span>MADE FOR THE MOMENT.</span>
+        <span>© 2026 MOMENTUM STUDIO. ALL RIGHTS RESERVED.</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ================================================== -->
+  <!-- HIGH-END MODAL POPUP (Coaches & VIP Voices)        -->
+  <!-- Matching Reference Pic 4: Clear Left Photo Card    -->
+  <!-- ================================================== -->
+  <div id="profile-modal" class="fixed inset-0 z-[99990] bg-[#0B0E17]/90 backdrop-blur-2xl flex items-center justify-center p-3 sm:p-6 md:p-10 hidden-modal overflow-y-auto" onclick="handleModalBackdropClick(event)" role="dialog" aria-modal="true">
+    
+    <div id="modal-card-container" class="relative bg-[#111625] border border-white/10 rounded-3xl max-w-5xl w-full overflow-hidden shadow-2xl my-auto transition-transform duration-300" onclick="event.stopPropagation()">
+      
+      <!-- Top Action Bar with [X] Close -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/[0.08] bg-[#151C2E]">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#F97316] shadow-[0_0_8px_#F97316]"></span>
+          <span id="modal-badge" class="font-mono text-xs tracking-widest uppercase text-slate-200 font-bold">MOMENTUM COACHING ROSTER</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span id="modal-counter-top" class="font-mono text-xs text-[#F97316] tracking-widest font-bold">01 / 09</span>
+          <button onclick="closeProfileModal()" aria-label="Close Profile Modal" class="w-9 h-9 rounded-full bg-[#1A2234] hover:bg-[#F97316] text-white hover:text-[#0B0E17] flex items-center justify-center transition-colors min-h-[36px] min-w-[36px]">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Modal Grid: Left Photo Card + Right Bio & Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6 sm:p-8 max-h-[82vh] overflow-y-auto">
+        <!-- Left: Coach's Full Photo Card Image clearly rendered (natural bright full color) -->
+        <div class="md:col-span-5 flex flex-col">
+          <div class="relative rounded-2xl overflow-hidden aspect-[3/4.2] border border-white/10 shadow-xl bg-[#1A2234] w-full">
+            <img id="modal-img" src="COACH%20AKKIL.png" alt="Profile Image" class="w-full h-full object-cover object-top filter brightness-105 contrast-105" />
+            <div class="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/60 to-transparent">
+              <span id="modal-img-role" class="font-mono text-[10px] tracking-widest uppercase text-[#F97316] font-bold block"></span>
+              <span id="modal-img-name" class="headline-bebas text-2xl text-white"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Detailed Content -->
+        <div class="md:col-span-7 flex flex-col justify-between">
+          <div>
+            <h2 id="modal-name" class="headline-bebas text-3xl sm:text-4xl md:text-5xl text-white leading-none mb-2"></h2>
+            <div id="modal-role" class="font-mono text-xs tracking-[0.25em] text-[#F97316] uppercase font-bold mb-4"></div>
+            <p id="modal-bio" class="text-slate-300 text-sm sm:text-base leading-relaxed font-light mb-6"></p>
+
+            <!-- Stats Strip (3 columns with thin dividers) -->
+            <div id="modal-stats-strip" class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-[#151C2E] border border-white/[0.08] mb-6">
+              <div>
+                <span class="font-mono text-[9px] tracking-widest uppercase text-slate-400 block mb-0.5">SPECIALTY</span>
+                <span id="modal-stat-1" class="font-mono text-xs text-[#F97316] font-bold block leading-tight"></span>
+              </div>
+              <div>
+                <span class="font-mono text-[9px] tracking-widest uppercase text-slate-400 block mb-0.5">QUALIFICATION</span>
+                <span id="modal-stat-2" class="font-mono text-xs text-white font-bold block leading-tight"></span>
+              </div>
+              <div>
+                <span class="font-mono text-[9px] tracking-widest uppercase text-slate-400 block mb-0.5">MANTRA</span>
+                <span id="modal-stat-3" class="font-mono text-xs text-slate-300 font-bold block leading-tight"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 Full-Width Action Bars -->
+          <div class="space-y-2.5 pt-2">
+            <!-- 1. Train with Coach / Athlete enquiry -->
+            <a id="modal-action-train" href="#" target="_blank" class="w-full py-3.5 px-5 rounded-xl bg-[#F97316] text-[#0B0E17] hover:bg-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all shadow-[0_0_15px_rgba(249,115,22,0.35)] group min-h-[48px]">
+              <span class="flex items-center gap-2.5">
+                <i class="fa-brands fa-whatsapp text-base"></i>
+                <span id="modal-train-text">TRAIN WITH COACH</span>
+              </span>
+              <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+            </a>
+
+            <!-- 2. Follow Handle / Call Studio -->
+            <a id="modal-action-social" href="#" target="_blank" class="w-full py-3 px-5 rounded-xl bg-[#1A2234] hover:bg-[#232F48] border border-white/10 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all group min-h-[44px]">
+              <span class="flex items-center gap-2.5">
+                <i id="modal-social-icon" class="fa-brands fa-instagram text-[#F97316]"></i>
+                <span id="modal-social-text">FOLLOW ON INSTAGRAM</span>
+              </span>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+
+            <!-- 3. Visit on Maps -->
+            <a href="https://www.google.com/maps/search/?api=1&query=Momentum+Studio+Sathyadev+Avenue+MRC+Nagar+Chennai+600028" target="_blank" class="w-full py-3 px-5 rounded-xl bg-[#1A2234] hover:bg-[#232F48] border border-white/10 text-white font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-between transition-all group min-h-[44px]">
+              <span class="flex items-center gap-2.5">
+                <i class="fa-solid fa-location-dot text-[#F97316]"></i>
+                <span>VISIT STUDIO ON GOOGLE MAPS</span>
+              </span>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Prev / Next Navigation -->
+      <div class="flex items-center justify-between px-6 py-4 bg-[#151C2E] border-t border-white/[0.08] font-mono text-xs">
+        <button onclick="navigateModal(-1)" class="px-4 py-2 rounded-lg bg-[#1A2234] hover:bg-[#232F48] text-white flex items-center gap-2 transition-colors min-h-[38px]">
+          <i class="fa-solid fa-arrow-left"></i> PREV
+        </button>
+        <span id="modal-counter-bottom" class="text-[#F97316] font-bold tracking-widest">COACH 01 / 09</span>
+        <button onclick="navigateModal(1)" class="px-4 py-2 rounded-lg bg-[#1A2234] hover:bg-[#232F48] text-white flex items-center gap-2 transition-colors min-h-[38px]">
+          NEXT <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================================================== -->
+  <!-- JAVASCRIPT APPLICATION CORE                        -->
+  <!-- ================================================== -->
+  <script>
+    /* ----------------------------------------------------
+       1. DATA ARRAYS (Exact URL-encoded asset names)
+    ---------------------------------------------------- */
+    const ASSETS = {
+      logo: 'LOGO.png',
+      heroVideo: 'momentum_lanidng_video.mp4',
+      hyrox1: 'HYROX1.png',
+      hyrox2: 'HYROX2.png',
+      hyrox3: 'HYROX3.png',
+      hyrox4: 'HYROX4.png',
+      hyrox5: 'HYROX5.png',
+      hyrox6: 'HYROX6.png',
+      hyrox7: 'HYROX7.png',
+      stride1: 'STRIDE_RUNNING%20CLUB1.png',
+      stride2: 'STRIDE_RUNNUNG%20CLUB2.png',
+      teamMembers: 'TEAM%20MEMBERS.png',
+      coachAkkil: 'COACH%20AKKIL.png',
+      coachShwetha: 'COACH%20SHWETHA.png',
+      coachSabari: 'COACH%20Sabari.png',
+      coachKamesh: 'COACH%20KAMESH.png',
+      coachDeepak: 'COACH%20DEEPAK.png',
+      coachDeepakD: 'COACH%20DEEPAK%20DEVARAJ.png',
+      coachNishanthan: 'COACH%20NISHANTHAN.png',
+      coachSiddarth: 'COACH%20SIDDARTH.png',
+      coachKaran: 'COACHKARAN.png',
+      testimonialVarun: 'TESTIMONIAL_VARUN.png',
+      testimonialAniruth: 'TESTIMONIAL_ANIRUTH.png'
+    };
+
+    // 9 Exact Coaches Data
+    const COACHES = [
+      {
+        id: 'akkil',
+        firstName: 'AKKIL',
+        lastName: 'SRINATH',
+        role: 'HEAD COACH',
+        subRole: 'HEAD COACH | MOMENTUM',
+        image: ASSETS.coachAkkil,
+        bio: "MSc Applied Strength & Conditioning Science (St. Mary's University, London, Merit); former S&C coach, Fulham FC Football Academy (UK); ex-professional cricketer; India's 1st independent professional to introduce VALD Performance Testing Technology.",
+        specialty: "APPLIED S&C SCIENCE & VALD",
+        qualification: "MSc S&C (ST. MARY'S, UK)",
+        mantra: "DATA-DRIVEN ATHLETIC MASTERY",
+        socialType: 'phone',
+        socialText: 'CALL THE STUDIO',
+        socialUrl: 'tel:+919384207764'
+      },
+      {
+        id: 'shweta',
+        firstName: 'SHWETA',
+        lastName: 'BHARGAVI',
+        role: 'S&C & KALARIPAYATTU COACH',
+        subRole: 'FOUNDER @QI_STRENGTH | MOMENTUM',
+        image: ASSETS.coachShwetha,
+        bio: "Founder & Coach at @qi_strength. S&C coach and Kalaripayattu specialist fusing ancient martial movement patterns with modern athletic durability and power development.",
+        specialty: "KALARIPAYATTU & STRENGTH",
+        qualification: "FOUNDER @QI_STRENGTH",
+        mantra: "FLUID POWER & MARTIAL DISCIPLINE",
+        socialType: 'instagram',
+        socialText: 'FOLLOW @SHWETAGAI',
+        socialUrl: 'https://instagram.com/shwetagai'
+      },
+      {
+        id: 'sabari',
+        firstName: 'SABARI',
+        lastName: 'KRISHAN',
+        role: 'HYROX COACH',
+        subRole: 'HYROX LEAD COACH | MOMENTUM',
+        image: ASSETS.coachSabari,
+        bio: "NASM | LAW | DNHE certified. 'Run far – Lift heavy – Outlast everyone | Built for more | Compete to be the best.' Specializes in race pacing, sled endurance and lactate threshold mastery.",
+        specialty: "HYROX RACE PACE & ENGINE",
+        qualification: "NASM / LAW / DNHE CERTIFIED",
+        mantra: "RUN FAR · LIFT HEAVY · OUTLAST",
+        socialType: 'phone',
+        socialText: 'CALL THE STUDIO',
+        socialUrl: 'tel:+919384207764'
+      },
+      {
+        id: 'kamesh',
+        firstName: 'KAMESH',
+        lastName: 'MOHAN',
+        role: 'S&C COACH',
+        subRole: 'FOUNDER @ACTIFFITNESS | MOMENTUM',
+        image: ASSETS.coachKamesh,
+        bio: "S&C Coach and Founder of @actiffitness. Dedicated to training kids, athletes & everyday humans with science-backed foundational strength, posture control, and long-term joint health.",
+        specialty: "YOUTH & ADULT S&C",
+        qualification: "FOUNDER @ACTIFFITNESS",
+        mantra: "TRAIN FOR LIFE & PERFORMANCE",
+        socialType: 'instagram',
+        socialText: 'FOLLOW @ACTIFFITNESS',
+        socialUrl: 'https://instagram.com/actiffitness'
+      },
+      {
+        id: 'deepak-a',
+        firstName: 'DEEPAK',
+        lastName: 'AKASH',
+        role: 'PERFORMANCE COACH',
+        subRole: 'COACH & CREATIVE | MOMENTUM',
+        image: ASSETS.coachDeepak,
+        bio: "'Help others grow while you grow.' Passionate about improving training quality so people live longer, healthier lives. Turns ideas into brands, visual creativity. Favourite food: jackfruit.",
+        specialty: "TRAINING QUALITY & LONGEVITY",
+        qualification: "COACH & VISUAL CREATIVE",
+        mantra: "HELP OTHERS GROW WHILE YOU GROW",
+        socialType: 'phone',
+        socialText: 'CALL THE STUDIO',
+        socialUrl: 'tel:+919384207764'
+      },
+      {
+        id: 'deepak-d',
+        firstName: 'DEEPAK',
+        lastName: 'DEVARAJ',
+        role: 'S&C COACH',
+        subRole: 'PERFORMANCE COACH | MOMENTUM',
+        image: ASSETS.coachDeepakD,
+        bio: "'A fit body, a calm mind, a house full of love. These things cannot be bought – they must be earned.' Building stronger bodies and long-term health. Plays cricket. Favourite food: Alfredo chicken pasta.",
+        specialty: "STRENGTH & CRICKET S&C",
+        qualification: "ELITE PERFORMANCE COACH",
+        mantra: "THESE THINGS MUST BE EARNED",
+        socialType: 'phone',
+        socialText: 'CALL THE STUDIO',
+        socialUrl: 'tel:+919384207764'
+      },
+      {
+        id: 'nishanthan',
+        firstName: 'NISHANTHAN',
+        lastName: '',
+        role: 'HYBRID STRENGTH COACH',
+        subRole: 'HYBRID COACH | MOMENTUM',
+        image: ASSETS.coachNishanthan,
+        bio: "'Show up every day. Outwork yesterday.' Building strength & discipline through hybrid training, road running, and chill bouldering. Favourite food: grilled chicken & rice.",
+        specialty: "HYBRID RUNNING & BOULDERING",
+        qualification: "HYBRID ATHLETIC SPECIALIST",
+        mantra: "SHOW UP EVERY DAY. OUTWORK.",
+        socialType: 'phone',
+        socialText: 'CALL THE STUDIO',
+        socialUrl: 'tel:+919384207764'
+      },
+      {
+        id: 'siddharth',
+        firstName: 'SIDDHARTH',
+        lastName: 'SUNIL',
+        role: 'ELITE S&C COACH',
+        subRole: 'ASIAN ROWING CHAMPION | MOMENTUM',
+        image: ASSETS.coachSiddarth,
+        bio: "MSc S&C (UK). Asian Indoor Rowing Champion 2025 🥇. National Rowing Medalist (3× Silver 🥈, 3× Bronze 🥉). Founder @r.a.n.g.e.fitness. Elite power output and rowing mechanics.",
+        specialty: "ROWING POWER & S&C (UK)",
+        qualification: "ASIAN CHAMPION 2025 🥇",
+        mantra: "CHAMPIONSHIP DISCIPLINE ALWAYS",
+        socialType: 'instagram',
+        socialText: 'FOLLOW @R.A.N.G.E.FITNESS',
+        socialUrl: 'https://instagram.com/r.a.n.g.e.fitness'
+      },
+      {
+        id: 'karan',
+        firstName: 'KARAN',
+        lastName: '',
+        role: 'NUTRITION & HYPERTROPHY',
+        subRole: 'PLANT-BASED SPECIALIST | MOMENTUM',
+        image: ASSETS.coachKaran,
+        bio: "Vegan & vegetarian fat-loss and strength specialist. Muscle building without kitchen/gym exhaustion or heavy reliance on supplements.",
+        specialty: "VEGAN / VEGETARIAN S&C",
+        qualification: "NUTRITION & BODY COMP",
+        mantra: "SUSTAINABLE STRENGTH & HEALTH",
+        socialType: 'phone',
+        socialText: 'CALL THE STUDIO',
+        socialUrl: 'tel:+919384207764'
+      }
+    ];
+
+    // 6 Stacking Tracks
+    const TRACKS = [
+      {
+        tag: '01 / HYROX',
+        title: 'HYROX AFFILIATED PREP',
+        location: 'MRC NAGAR · CHENNAI',
+        description: 'Official affiliated race training. Pacing strategies, sled push/pull mechanics, wall ball endurance, and lactate clearance cycles for singles and doubles racers.',
+        image: ASSETS.hyrox1
+      },
+      {
+        tag: '02 / STRENGTH',
+        title: 'STRENGTH & CONDITIONING',
+        location: 'MRC NAGAR · CHENNAI',
+        description: 'European academy-level athletic development. Foundational compound lifts, Olympic pulling, velocity based training and injury resilience protocols.',
+        image: ASSETS.hyrox2
+      },
+      {
+        tag: '03 / ENDURANCE',
+        title: 'HYBRID ENDURANCE (STRIDE)',
+        location: 'MRC NAGAR · CHENNAI',
+        description: 'Stride running club programming. Zone 2 aerobic base building, tempo intervals, cadence refinement, and hybrid strength pairings.',
+        image: ASSETS.stride1
+      },
+      {
+        tag: '04 / YOUTH',
+        title: 'YOUTH LTAD PROGRAM',
+        location: 'MRC NAGAR · CHENNAI',
+        description: 'Long-Term Athletic Development for young athletes. Movement literacy, fundamental motor skills, posture, speed mechanics and cognitive focus.',
+        image: ASSETS.hyrox3
+      },
+      {
+        tag: '05 / VALD',
+        title: 'VALD PERFORMANCE TESTING',
+        location: 'MRC NAGAR · CHENNAI',
+        description: "India's first independent VALD diagnostics setup. Dual force plates, dynamometry, limb symmetry indexing and real-time neuromuscular data.",
+        image: ASSETS.hyrox4
+      },
+      {
+        tag: '06 / RECOVERY',
+        title: 'PHYSIO, REHAB & NUTRITION',
+        location: 'MRC NAGAR · CHENNAI',
+        description: 'Specialised sports physiotherapy, joint mobilization, return-to-sport protocols, and customized plant-based or omnivore nutritional periodization.',
+        image: ASSETS.hyrox5
+      }
+    ];
+
+    // Visual Archive Images
+    const ARCHIVE_ITEMS = [
+      { img: ASSETS.hyrox1, title: 'HYROX SIMULATION 01' },
+      { img: ASSETS.hyrox7, title: 'POWER CLEANS ON FLOOR' },
+      { img: ASSETS.stride1, title: 'STRIDE RUN CLUB MRC' },
+      { img: ASSETS.hyrox3, title: 'YOUTH SPEED DRILLS' },
+      { img: ASSETS.hyrox4, title: 'VALD FORCE TESTING' },
+      { img: ASSETS.stride2, title: 'TEMPO MARATHON STRIDES' },
+      { img: ASSETS.hyrox5, title: 'RECOVERY MOBILITY' },
+      { img: ASSETS.teamMembers, title: 'COACHING ROSTER' },
+      { img: ASSETS.hyrox6, title: 'SLED PUSH CAPACITY' },
+      { img: ASSETS.hyrox2, title: 'BARBELL VELOCITY' }
+    ];
+
+    // 6 VIP Voices Testimonials (exact text from prompt)
+    const VIP_VOICES = [
+      {
+        id: 'varun',
+        name: 'VARUN CHAKRAVARTHY',
+        role: 'INDIAN CRICKET ATHLETE',
+        avatar: ASSETS.testimonialVarun,
+        highlight: 'Research-backed S&C · Visible transformation in 2–3 weeks',
+        quote: "All the exercises and programs that he gives are very well backed by a strong research background... I will definitely recommend people to try out his workout programs.",
+        statLabel: 'SPORT',
+        statVal: 'INTERNATIONAL CRICKET'
+      },
+      {
+        id: 'anirudh',
+        name: 'ANIRUDH RAVICHANDER',
+        role: 'MUSIC COMPOSER / ARTIST',
+        avatar: ASSETS.testimonialAniruth,
+        highlight: 'High-energy strength training & heavy deadlifting at Momentum.',
+        quote: "High-energy strength training, heavy deadlifting, and athletic resilience built directly on the Momentum Studio floor.",
+        statLabel: 'DISCIPLINE',
+        statVal: 'HIGH-ENERGY S&C'
+      },
+      {
+        id: 'aishwarya',
+        name: 'AISHWARYA MANNIVANAN',
+        role: 'ATHLETE & ARTIST',
+        avatar: ASSETS.hyrox1,
+        highlight: 'Learning how to move better in daily life',
+        quote: "He really takes the time to design a program that suits my specific goals... Every workout with him isn't just about pushing through—it's about learning how to move better in daily life. His approach is all about quality over quantity, and his energy is infectious!",
+        statLabel: 'FOCUS',
+        statVal: 'MOVEMENT & LONGEVITY'
+      },
+      {
+        id: 'anahita',
+        name: 'ANAHITA RATTHA',
+        role: 'TRAINEE',
+        avatar: ASSETS.hyrox3,
+        highlight: 'Progress tracked closely and meticulously',
+        quote: "Workouts have pushed me beyond what I believed I could do... My favourite part about working out with you is that you track my progress so closely and meticulously (weights and reps from 6 months ago!).",
+        statLabel: 'BENCHMARK',
+        statVal: 'PRECISION TRACKING'
+      },
+      {
+        id: 'adhishwar',
+        name: 'TA ADHISHWAR',
+        role: 'ATHLETE',
+        avatar: ASSETS.hyrox7,
+        highlight: 'Instrumental in bringing me back to shape',
+        quote: "I've had the opportunity to train with some of the most elite S&Cs in the country... Akkil got me hooked back onto training when my fitness journey was at its lowest.",
+        statLabel: 'LEVEL',
+        statVal: 'ELITE ATHLETE S&C'
+      },
+      {
+        id: 'siddharth-t',
+        name: 'SIDDHARTH TRIVELLORE',
+        role: '30+ YEARS VETERAN ATHLETE',
+        avatar: ASSETS.hyrox4,
+        highlight: 'S&C, mobility, and physiotherapy combination',
+        quote: "Over the past few years, I picked up injuries. Luckily I stumbled upon Momentum. The combination of S&C, mobility, and physiotherapy with a qualified therapist is top notch!",
+        statLabel: 'ATHLETIC AGE',
+        statVal: '30+ YEARS VETERAN'
+      }
+    ];
+
+    /* ----------------------------------------------------
+       2. IMAGE FALLBACK HELPER
+    ---------------------------------------------------- */
+    function handleImgError(img, label) {
+      if (img.id === 'modal-img') return;
+      img.onerror = null;
+      img.style.display = 'none';
+      const fallback = document.createElement('div');
+      fallback.className = 'img-fallback-block w-full h-full min-h-[140px]';
+      fallback.innerHTML = `
+        <div class="w-10 h-10 rounded-full border border-[#F97316] flex items-center justify-center mb-2">
+          <i class="fa-solid fa-dumbbell text-[#F97316]"></i>
+        </div>
+        <span class="text-xs uppercase tracking-widest text-[#F97316] font-bold">${label || 'MOMENTUM'}</span>
+        <span class="text-[10px] text-slate-400 mt-1 font-mono">MRC NAGAR · CHENNAI</span>
+      `;
+      if (img.parentNode) {
+        img.parentNode.appendChild(fallback);
+      }
+    }
+
+    /* ----------------------------------------------------
+       3. PRELOADER & SLIDING WIPE ENGINE (FAIL-SAFE 3.5s TIMEOUT)
+    ---------------------------------------------------- */
+    let wipeTriggered = false;
+
+    function forceTriggerWipe() {
+      if (wipeTriggered) return;
+      wipeTriggered = true;
+
+      const preloader = document.getElementById('preloader');
+      const content = document.getElementById('preloader-content');
+      const counterEl = document.getElementById('preloader-counter');
+      const barEl = document.getElementById('preloader-bar');
+      const strips = document.querySelectorAll('.curtain-strip');
+
+      if (counterEl) counterEl.textContent = '100';
+      if (barEl) barEl.style.transform = 'scaleX(1)';
+
+      // 1. Fade out preloader content quickly (0.28s)
+      if (typeof gsap !== 'undefined' && content) {
+        gsap.to(content, {
+          opacity: 0,
+          duration: 0.28,
+          ease: 'power2.out',
+          onComplete: executeStrips
+        });
+      } else {
+        if (content) content.style.opacity = '0';
+        executeStrips();
+      }
+
+      function executeStrips() {
+        if (preloader) {
+          preloader.style.backgroundColor = 'transparent';
+          preloader.classList.remove('bg-[#F97316]');
+        }
+
+        // 8 Slanted vertical parallelogram stripes slide up/down alternately
+        if (typeof gsap !== 'undefined' && strips.length > 0) {
+          gsap.to(strips, {
+            yPercent: (i) => (i % 2 === 0 ? -108 : 108),
+            duration: 0.95,
+            stagger: 0.05,
+            ease: 'power4.inOut',
+            onComplete: finalizePreloader
+          });
+        } else {
+          finalizePreloader();
+        }
+      }
+
+      function finalizePreloader() {
+        if (preloader) {
+          preloader.style.display = 'none';
+          preloader.style.pointerEvents = 'none';
+        }
+        // Ensure hero video is playing
+        const vid = document.getElementById('hero-video');
+        if (vid && vid.paused) {
+          vid.play().catch(() => {});
+        }
+        // Animate hero mask lines
+        if (typeof gsap !== 'undefined') {
+          gsap.fromTo('#hero-content .mask-line', 
+            { yPercent: 110, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: 'power4.out' }
+          );
+        }
+        try {
+          if (typeof initScrollTriggers === 'function') initScrollTriggers();
+        } catch (e) {
+          console.warn('ScrollTrigger warning:', e);
+        }
+      }
+    }
+
+    // MANDATORY 3.5-SECOND HARD SAFETY FALLBACK:
+    // Ensures preloader NEVER gets stuck at 0% even if an asset fails or network stalls
+    setTimeout(() => {
+      forceTriggerWipe();
+    }, 3500);
+
+    // Self-executing 3.0s Counter + Word Drop/Bounce
+    (function startPreloaderEngine() {
+      function runVisualCounter() {
+        const counterEl = document.getElementById('preloader-counter');
+        const barEl = document.getElementById('preloader-bar');
+
+        if (typeof gsap !== 'undefined') {
+          // Words drop down and bounce smoothly from top (back.out(1.7))
+          gsap.fromTo('.pre-word-bounce', 
+            { y: -120, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1.15, stagger: 0.2, ease: 'back.out(1.7)', delay: 0.05 }
+          );
+
+          let count = { val: 0 };
+          gsap.to(count, {
+            val: 100,
+            duration: 3.0,
+            ease: 'power1.inOut',
+            onUpdate: () => {
+              const v = Math.min(100, Math.round(count.val));
+              if (counterEl) counterEl.textContent = v;
+              if (barEl) barEl.style.transform = `scaleX(${v / 100})`;
+            },
+            onComplete: () => {
+              forceTriggerWipe();
+            }
+          });
+        } else {
+          // Pure JS interval fallback
+          let val = 0;
+          const interval = setInterval(() => {
+            val += 2;
+            if (val > 100) val = 100;
+            if (counterEl) counterEl.textContent = val;
+            if (barEl) barEl.style.transform = `scaleX(${val / 100})`;
+            if (val >= 100) {
+              clearInterval(interval);
+              forceTriggerWipe();
+            }
+          }, 60);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runVisualCounter);
+      } else {
+        runVisualCounter();
+      }
+    })();
+
+    /* ----------------------------------------------------
+       PAGE INITIALIZATION (ISOLATED TRY/CATCH)
+    ---------------------------------------------------- */
+    function initAllPageComponents() {
+      try { renderCoaches(); } catch (e) { console.error('Coaches init error:', e); }
+      try { renderTracks(); } catch (e) { console.error('Tracks init error:', e); }
+      try { renderArchive(); } catch (e) { console.error('Archive init error:', e); }
+      try { renderVoices(); } catch (e) { console.error('Voices init error:', e); }
+      try { initCustomCursor(); } catch (e) { console.error('Cursor init error:', e); }
+      try { enableHorizontalWheelScroll('lineup-scroll-container'); } catch (e) {}
+      try { enableHorizontalWheelScroll('archive-scroll-container'); } catch (e) {}
+      try { enableHorizontalWheelScroll('voices-scroll-container'); } catch (e) {}
+      try { initKineticTypography(); } catch (e) { console.error('Kinetic typography init error:', e); }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllPageComponents);
+    } else {
+      initAllPageComponents();
+    }
+
+    // Hero video play/pause
+    let videoEl = null;
+    function toggleHeroVideo() {
+      videoEl = videoEl || document.getElementById('hero-video');
+      const icon = document.getElementById('video-toggle-icon');
+      if (!videoEl) return;
+      if (videoEl.paused) {
+        videoEl.play();
+        icon.className = 'fa-solid fa-pause';
+      } else {
+        videoEl.pause();
+        icon.className = 'fa-solid fa-play';
+      }
+    }
+
+    // First interaction fallback to guarantee video autoplay
+    ['touchstart', 'click', 'keydown'].forEach(evt => {
+      document.addEventListener(evt, () => {
+        const vid = document.getElementById('hero-video');
+        if (vid && vid.paused) {
+          vid.play().catch(() => {});
+        }
+      }, { once: true, passive: true });
+    });
+
+    // Navbar scroll listener
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if (window.scrollY > 40) {
+        nav.classList.add('bg-[#0B0E17]/85', 'backdrop-blur-xl', 'shadow-2xl');
+      } else {
+        nav.classList.remove('bg-[#0B0E17]/85', 'backdrop-blur-xl', 'shadow-2xl');
+      }
+    });
+
+    // Mobile nav toggle
+    function toggleMobileNav(state) {
+      const overlay = document.getElementById('mobile-nav-overlay');
+      const isOpen = state !== undefined ? state : overlay.classList.contains('-translate-y-full');
+      if (isOpen) {
+        overlay.classList.remove('-translate-y-full');
+        overlay.classList.add('translate-y-0');
+        document.body.style.overflow = 'hidden';
+      } else {
+        overlay.classList.add('-translate-y-full');
+        overlay.classList.remove('translate-y-0');
+        document.body.style.overflow = '';
+      }
+    }
+
+    /* ----------------------------------------------------
+       4. RENDER COACHES (9 Panels, Natural Color Hover)
+    ---------------------------------------------------- */
+    function renderCoaches() {
+      const track = document.getElementById('coaches-track');
+      if (!track) return;
+      track.innerHTML = '';
+
+      COACHES.forEach((coach, idx) => {
+        const card = document.createElement('div');
+        card.className = 'coach-card clean-image-card group relative overflow-hidden bg-[#131824] rounded-2xl cursor-pointer transition-all duration-300 border border-white/10 hover:border-[#F97316]/60 hover:shadow-[0_0_30px_rgba(249,115,22,0.25)]';
+        card.style.width = 'clamp(280px, 24vw, 360px)';
+        card.style.aspectRatio = '3 / 4.1';
+        card.setAttribute('data-index', idx);
+        card.onclick = () => openProfileModal('coach', idx);
+
+        card.innerHTML = `
+          <img src="${coach.image}" alt="${coach.firstName} ${coach.lastName}" onerror="handleImgError(this, '${coach.firstName}')" class="w-full h-full object-cover object-top" />
+          
+          <!-- Dark gradient bottom overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/40 to-transparent z-10 pointer-events-none"></div>
+
+          <!-- Bottom Left Name & Tag -->
+          <div class="absolute bottom-5 left-5 right-14 z-20 pointer-events-none">
+            <span class="font-mono text-[9px] tracking-[0.25em] text-[#F97316] uppercase block font-bold mb-1">${coach.role}</span>
+            <div class="headline-bebas text-3xl sm:text-4xl text-white leading-none">
+              ${coach.firstName} <span class="text-slate-300 text-2xl sm:text-3xl">${coach.lastName}</span>
+            </div>
+            <span class="font-mono text-[10px] text-slate-400 block mt-1 tracking-wider uppercase truncate">MOMENTUM STUDIO</span>
+          </div>
+
+          <!-- Bottom Right Circular Arrow Button -->
+          <div class="absolute bottom-5 right-5 z-20">
+            <div class="coach-arrow-btn w-9 h-9 rounded-full bg-white text-[#0B0E17] flex items-center justify-center text-xs transition-all duration-300 group-hover:bg-[#F97316] group-hover:text-black group-hover:shadow-[0_0_15px_#F97316] group-hover:-rotate-45">
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        `;
+        track.appendChild(card);
+      });
+
+      // Update lineup counter on scroll
+      const container = document.getElementById('lineup-scroll-container');
+      container.addEventListener('scroll', () => {
+        const scrollLeft = container.scrollLeft;
+        const cardWidth = container.querySelector('.coach-card')?.offsetWidth || 300;
+        const activeIdx = Math.min(8, Math.max(0, Math.round(scrollLeft / cardWidth)));
+        const counter = document.getElementById('lineup-active-index');
+        if (counter) counter.textContent = (activeIdx + 1 < 10 ? '0' : '') + (activeIdx + 1);
+      });
+
+      enableDragScroll(container);
+      initCoachAutoScroll();
+    }
+
+    // Coach Continuous Motion Engine (Horizontal continuous auto-scrolling track)
+    let coachAutoScrollActive = true;
+    let coachAutoScrollTimer = null;
+
+    function initCoachAutoScroll() {
+      const container = document.getElementById('lineup-scroll-container');
+      if (!container) return;
+
+      const speed = 0.75; // Smooth continuous glide speed in px per frame
+      function autoScrollLoop() {
+        if (coachAutoScrollActive) {
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          if (maxScroll > 10) {
+            if (container.scrollLeft >= maxScroll - 2) {
+              container.scrollLeft = 0; // Loop wrap seamlessly
+            } else {
+              container.scrollLeft += speed;
+            }
+          }
+        }
+        requestAnimationFrame(autoScrollLoop);
+      }
+      requestAnimationFrame(autoScrollLoop);
+
+      // Smooth pause on hover
+      container.addEventListener('mouseenter', () => { coachAutoScrollActive = false; });
+      container.addEventListener('mouseleave', () => { coachAutoScrollActive = true; });
+
+      // Pause during touch swipe / drag interactions and resume after delay
+      container.addEventListener('touchstart', () => { coachAutoScrollActive = false; }, { passive: true });
+      container.addEventListener('touchend', () => {
+        clearTimeout(coachAutoScrollTimer);
+        coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 2500);
+      }, { passive: true });
+      container.addEventListener('mousedown', () => { coachAutoScrollActive = false; });
+      container.addEventListener('mouseup', () => {
+        clearTimeout(coachAutoScrollTimer);
+        coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 2500);
+      });
+    }
+
+    function scrollLineup(direction) {
+      coachAutoScrollActive = false;
+      clearTimeout(coachAutoScrollTimer);
+      coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3500);
+
+      const container = document.getElementById('lineup-scroll-container');
+      const cardWidth = container.querySelector('.coach-card')?.offsetWidth || 320;
+      container.scrollBy({ left: direction * (cardWidth + 16), behavior: 'smooth' });
+    }
+
+    /* ----------------------------------------------------
+       5. RENDER STACKING TRACKS
+    ---------------------------------------------------- */
+    function renderTracks() {
+      const container = document.getElementById('stacking-cards-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      TRACKS.forEach((track, idx) => {
+        const card = document.createElement('div');
+        card.className = `track-stack-card clean-image-card sticky rounded-3xl overflow-hidden border border-white/10 shadow-2xl transition-all duration-500`;
+        card.style.top = `calc(84px + ${idx * 40}px)`;
+        card.style.height = `clamp(460px, 68vh, 600px)`;
+
+        card.innerHTML = `
+          <img src="${track.image}" alt="${track.title}" onerror="handleImgError(this, '${track.tag}')" class="w-full h-full object-cover object-top" />
+          
+          <!-- Dark Vignette Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/60 to-[#0B0E17]/20 z-10 pointer-events-none"></div>
+
+          <!-- Top-Left Dark Chip Tag -->
+          <div class="absolute top-6 left-6 z-20">
+            <span class="track-tag-chip px-4 py-2 rounded-full bg-[#131824]/90 backdrop-blur-md border border-white/15 font-mono text-xs font-bold tracking-widest text-slate-300 uppercase transition-all duration-300">
+              ${track.tag}
+            </span>
+          </div>
+
+          <!-- Bottom Left Content Stack -->
+          <div class="absolute bottom-8 left-8 right-8 z-20 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div class="max-w-xl">
+              <span class="font-mono text-[10px] tracking-[0.3em] uppercase text-[#F97316] font-bold block mb-1">
+                ${track.location}
+              </span>
+              <h3 class="headline-bebas text-4xl sm:text-5xl md:text-6xl text-white mb-3">
+                ${track.title}<span class="text-[#F97316]">.</span>
+              </h3>
+              <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-lg line-clamp-3">
+                ${track.description}
+              </p>
+            </div>
+            <div>
+              <a href="https://wa.me/919384207764?text=${encodeURIComponent('Hi Momentum, I am enquiring about the ' + track.title + ' program.')}" target="_blank" class="px-6 py-3 rounded-full bg-white text-[#0B0E17] hover:bg-[#F97316] font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2 group shadow-lg min-h-[44px]">
+                <span>VIEW TRACK</span>
+                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+              </a>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* ----------------------------------------------------
+       6. RENDER ARCHIVE (Through Our Lens - Smooth Gliding)
+    ---------------------------------------------------- */
+    function renderArchive() {
+      const track = document.getElementById('archive-track');
+      if (!track) return;
+      track.innerHTML = '';
+
+      ARCHIVE_ITEMS.forEach((item, idx) => {
+        const offsetClass = idx % 2 === 1 ? 'mt-6' : 'mt-0';
+        const card = document.createElement('div');
+        card.className = `archive-card relative shrink-0 rounded-2xl overflow-hidden border border-white/10 ${offsetClass} transition-all duration-500 group cursor-pointer shadow-xl bg-[#0B0E17] hover:border-[#F97316] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]`;
+        card.style.width = 'clamp(260px, 20vw, 320px)';
+        card.style.aspectRatio = '3 / 4.6';
+
+        card.innerHTML = `
+          <!-- Athlete photo: defaults to dark monochrome, brightens and scales on hover -->
+          <img src="${item.img}" alt="${item.title}" onerror="handleImgError(this, 'ARCHIVE')" class="archive-img w-full h-full object-cover object-top transition-all duration-700" />
+          
+          <!-- Neon Orange Atmospheric Duotone Glow Wash (Video 23) -->
+          <div class="archive-duotone-color"></div>
+          <div class="archive-duotone-glow"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/35 to-transparent z-10 pointer-events-none"></div>
+
+          <!-- Bottom Label Strip -->
+          <div class="absolute bottom-0 inset-x-0 p-5 z-20 transition-transform duration-300 group-hover:-translate-y-1">
+            <span class="font-mono text-[9px] tracking-widest uppercase text-[#F97316] font-bold block mb-1">ARCHIVE // ${idx < 9 ? '0' + (idx+1) : idx+1}</span>
+            <span class="headline-bebas text-2xl text-white tracking-wider block drop-shadow">${item.title}</span>
+          </div>
+        `;
+        track.appendChild(card);
+      });
+
+      const container = document.getElementById('archive-scroll-container');
+      const progressBar = document.getElementById('archive-progress-bar');
+      container.addEventListener('scroll', () => {
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        if (maxScroll > 0 && progressBar) {
+          progressBar.style.width = `${(container.scrollLeft / maxScroll) * 100}%`;
+        }
+      });
+
+      enableDragScroll(container);
+      initArchiveAutoScroll();
+      initArchiveCardPulse();
+    }
+
+    // Section 05 Continuous Motion Engine (Horizontal continuous auto-scrolling track)
+    let archiveAutoScrollActive = true;
+    let archiveAutoScrollTimer = null;
+
+    function initArchiveAutoScroll() {
+      const container = document.getElementById('archive-scroll-container');
+      if (!container) return;
+
+      const speed = 0.75; // Continuous glide speed in px per frame
+      function autoScrollLoop() {
+        if (archiveAutoScrollActive) {
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          if (maxScroll > 10) {
+            if (container.scrollLeft >= maxScroll - 2) {
+              container.scrollLeft = 0; // Seamless loop wrap
+            } else {
+              container.scrollLeft += speed;
+            }
+          }
+        }
+        requestAnimationFrame(autoScrollLoop);
+      }
+      requestAnimationFrame(autoScrollLoop);
+
+      // Smooth pause on hover
+      container.addEventListener('mouseenter', () => { archiveAutoScrollActive = false; });
+      container.addEventListener('mouseleave', () => { archiveAutoScrollActive = true; });
+
+      // Pause during touch swipe / drag interactions and resume after delay
+      container.addEventListener('touchstart', () => { archiveAutoScrollActive = false; }, { passive: true });
+      container.addEventListener('touchend', () => {
+        clearTimeout(archiveAutoScrollTimer);
+        archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 2500);
+      }, { passive: true });
+      container.addEventListener('mousedown', () => { archiveAutoScrollActive = false; });
+      container.addEventListener('mouseup', () => {
+        clearTimeout(archiveAutoScrollTimer);
+        archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 2500);
+      });
+    }
+
+    function scrollArchive(dir) {
+      archiveAutoScrollActive = false;
+      clearTimeout(archiveAutoScrollTimer);
+      archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3500);
+
+      const container = document.getElementById('archive-scroll-container');
+      const cardWidth = container.querySelector('.archive-card')?.offsetWidth || 300;
+      container.scrollBy({ left: dir * (cardWidth + 24), behavior: 'smooth' });
+    }
+
+    // Smooth Zoom-In / Zoom-Out scale pulse on scroll focus / hover
+    function initArchiveCardPulse() {
+      const container = document.getElementById('archive-scroll-container');
+      if (!container) return;
+      const cards = container.querySelectorAll('.archive-card');
+
+      let lastActiveCard = null;
+      function checkCenterCard() {
+        const containerRect = container.getBoundingClientRect();
+        const centerX = containerRect.left + containerRect.width / 2;
+
+        let closestCard = null;
+        let closestDist = Infinity;
+
+        cards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const cardCenter = rect.left + rect.width / 2;
+          const dist = Math.abs(centerX - cardCenter);
+
+          if (dist < closestDist) {
+            closestDist = dist;
+            closestCard = card;
+          }
+        });
+
+        if (closestCard && closestDist < 200 && closestCard !== lastActiveCard) {
+          if (lastActiveCard) {
+            lastActiveCard.classList.remove('active-focus');
+            gsap.to(lastActiveCard, { scale: 1.0, duration: 0.4, ease: 'power2.out' });
+          }
+          lastActiveCard = closestCard;
+          closestCard.classList.add('active-focus');
+          // Smooth GSAP Zoom-In / Zoom-Out scale pulse: scale(1.0) -> scale(1.06) -> scale(1.0)
+          gsap.fromTo(closestCard,
+            { scale: 1.0 },
+            { scale: 1.06, duration: 0.5, yoyo: true, repeat: 1, ease: 'sine.inOut' }
+          );
+        }
+      }
+
+      container.addEventListener('scroll', checkCenterCard, { passive: true });
+
+      cards.forEach((card) => {
+        card.addEventListener('mouseenter', () => {
+          gsap.fromTo(card,
+            { scale: 1.0 },
+            { scale: 1.06, duration: 0.45, yoyo: true, repeat: 1, ease: 'sine.inOut' }
+          );
+        });
+        card.addEventListener('focus', () => {
+          gsap.fromTo(card,
+            { scale: 1.0 },
+            { scale: 1.06, duration: 0.45, yoyo: true, repeat: 1, ease: 'sine.inOut' }
+          );
+        });
+      });
+    }
+
+    /* ----------------------------------------------------
+       7. RENDER VIP VOICES (Horizontal Scroll & Modal)
+    ---------------------------------------------------- */
+    function renderVoices() {
+      const track = document.getElementById('voices-track');
+      if (!track) return;
+      track.innerHTML = '';
+
+      VIP_VOICES.forEach((voice, idx) => {
+        const card = document.createElement('div');
+        card.className = 'vip-card clean-image-card bg-[#131824] hover:bg-[#1A2234] border border-white/10 hover:border-[#F97316]/60 rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_0_30px_rgba(249,115,22,0.25)] group cursor-pointer shrink-0';
+        card.style.width = 'clamp(300px, 30vw, 400px)';
+        card.onclick = () => openProfileModal('voice', idx);
+
+        const initials = voice.name.split(' ').map(n => n[0]).join('');
+
+        card.innerHTML = `
+          <div>
+            <!-- Top Avatar & Name -->
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-[#F97316]/60 bg-[#0B0E17] shrink-0 flex items-center justify-center">
+                ${voice.avatar ? `
+                  <img src="${voice.avatar}" alt="${voice.name}" onerror="handleImgError(this, '${initials}')" class="w-full h-full object-cover object-top filter brightness-105" />
+                ` : `
+                  <span class="font-bebas text-2xl text-[#F97316]">${initials}</span>
+                `}
+              </div>
+              <div>
+                <h3 class="headline-bebas text-2xl text-white leading-none">${voice.name}</h3>
+                <span class="font-mono text-[10px] text-[#F97316] tracking-widest uppercase font-bold">${voice.role}</span>
+              </div>
+            </div>
+
+            <!-- Quote Preview / Highlight -->
+            <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light italic line-clamp-3">
+              "${voice.quote || voice.highlight}"
+            </p>
+          </div>
+
+          <!-- Bottom Action Row -->
+          <div class="flex items-center justify-between pt-4 border-t border-white/10 font-mono text-xs">
+            <span class="text-[#F97316] font-bold tracking-wider">${voice.statVal}</span>
+            <span class="text-white group-hover:text-[#F97316] flex items-center gap-2 transition-colors">
+              <span>READ MORE</span>
+              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+            </span>
+          </div>
+        `;
+        track.appendChild(card);
+      });
+
+      const container = document.getElementById('voices-scroll-container');
+      enableDragScroll(container);
+    }
+
+    function scrollVoices(dir) {
+      const container = document.getElementById('voices-scroll-container');
+      container.scrollBy({ left: dir * 360, behavior: 'smooth' });
+    }
+
+    /* ----------------------------------------------------
+       8. DRAG SCROLL & HORIZONTAL WHEEL HELPER
+    ---------------------------------------------------- */
+    function enableDragScroll(container) {
+      if (!container) return;
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+      let hasDragged = false;
+
+      container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        hasDragged = false;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+      });
+      container.addEventListener('mouseleave', () => isDown = false);
+      container.addEventListener('mouseup', () => isDown = false);
+      container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        if (Math.abs(walk) > 4) {
+          hasDragged = true;
+          e.preventDefault();
+          container.scrollLeft = scrollLeft - walk;
+        }
+      });
+      container.addEventListener('click', (e) => {
+        if (hasDragged) {
+          e.stopImmediatePropagation();
+        }
+      }, true);
+    }
+
+    function enableHorizontalWheelScroll(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          container.scrollBy({
+            left: e.deltaY * 1.2,
+            behavior: 'auto'
+          });
+        }
+      }, { passive: false });
+    }
+
+    /* ----------------------------------------------------
+       9. GSAP SCROLLTRIGGERS
+    ---------------------------------------------------- */
+    function initScrollTriggers() {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Hero Curtain Scrub
+      gsap.to('#hero-content', {
+        yPercent: -22,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#movement',
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true
+        }
+      });
+      gsap.to('#hero-video', {
+        scale: 1.15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#movement',
+          start: 'top bottom',
+          end: 'top top',
+          scrub: true
+        }
+      });
+      gsap.to('#hero-bottom-info, #hero-marquee', {
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#movement',
+          start: 'top bottom',
+          end: 'top 50%',
+          scrub: true
+        }
+      });
+
+      // Movement photo clip-path scrub
+      gsap.fromTo('#movement-photo',
+        { clipPath: 'inset(14% 8%)', scale: 1.1 },
+        {
+          clipPath: 'inset(0% 0%)',
+          scale: 1,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '#movement-photo-wrap',
+            start: 'top 80%',
+            end: 'center center',
+            scrub: true
+          }
+        }
+      );
+
+      // Big Headline masked line reveals
+      gsap.utils.toArray('.headline-bebas').forEach(h => {
+        const lines = h.querySelectorAll('.mask-line');
+        if (lines.length > 0) {
+          gsap.fromTo(lines,
+            { yPercent: 110, opacity: 0 },
+            {
+              yPercent: 0,
+              opacity: 1,
+              duration: 0.85,
+              stagger: 0.1,
+              ease: 'power4.out',
+              scrollTrigger: {
+                trigger: h,
+                start: 'top 88%'
+              }
+            }
+          );
+        }
+      });
+
+      // Stacking Cards Activation
+      const cards = gsap.utils.toArray('.track-stack-card');
+      cards.forEach((card) => {
+        ScrollTrigger.create({
+          trigger: card,
+          start: 'top 62%',
+          end: 'bottom 38%',
+          onEnter: () => activateTrackCard(card),
+          onEnterBack: () => activateTrackCard(card),
+          onLeave: () => deactivateTrackCard(card),
+          onLeaveBack: () => deactivateTrackCard(card)
+        });
+      });
+
+      // Stats Count-Up
+      const stats = gsap.utils.toArray('.counter-number');
+      stats.forEach(st => {
+        const target = parseInt(st.getAttribute('data-target'), 10) || 0;
+        let obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 1.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: st,
+            start: 'top 85%'
+          },
+          onUpdate: () => {
+            st.textContent = Math.floor(obj.val);
+          }
+        });
+      });
+    }
+
+    function activateTrackCard(card) {
+      card.classList.add('active');
+      const chip = card.querySelector('.track-tag-chip');
+      if (chip) {
+        chip.classList.remove('bg-[#131824]/90', 'text-slate-300');
+        chip.classList.add('bg-[#F97316]', 'text-[#0B0E17]', 'shadow-[0_0_15px_#F97316]');
+      }
+    }
+
+    function deactivateTrackCard(card) {
+      card.classList.remove('active');
+      const chip = card.querySelector('.track-tag-chip');
+      if (chip) {
+        chip.classList.add('bg-[#131824]/90', 'text-slate-300');
+        chip.classList.remove('bg-[#F97316]', 'text-[#0B0E17]', 'shadow-[0_0_15px_#F97316]');
+      }
+    }
+
+    /* ----------------------------------------------------
+       10. HIGH-END POPUP MODAL (Matching Reference Pic 4)
+    ---------------------------------------------------- */
+    let currentModalType = null;
+    let currentModalIndex = 0;
+
+    function openProfileModal(type, index) {
+      currentModalType = type;
+      currentModalIndex = index;
+
+      const modal = document.getElementById('profile-modal');
+      const card = document.getElementById('modal-card-container');
+      populateModalData();
+
+      document.body.style.overflow = 'hidden';
+      modal.classList.remove('hidden-modal');
+
+      gsap.fromTo(modal, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+      gsap.fromTo(card, 
+        { scale: 0.94, y: 20 }, 
+        { scale: 1, y: 0, duration: 0.4, ease: 'power3.out' }
+      );
+    }
+
+    function closeProfileModal() {
+      const modal = document.getElementById('profile-modal');
+      const card = document.getElementById('modal-card-container');
+
+      gsap.to(card, { scale: 0.95, y: 15, duration: 0.25, ease: 'power2.in' });
+      gsap.to(modal, {
+        opacity: 0,
+        duration: 0.25,
+        onComplete: () => {
+          modal.classList.add('hidden-modal');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
+    function handleModalBackdropClick(e) {
+      if (e.target.id === 'profile-modal') {
+        closeProfileModal();
+      }
+    }
+
+    function navigateModal(direction) {
+      if (currentModalType === 'coach') {
+        currentModalIndex = (currentModalIndex + direction + COACHES.length) % COACHES.length;
+      } else {
+        currentModalIndex = (currentModalIndex + direction + VIP_VOICES.length) % VIP_VOICES.length;
+      }
+      populateModalData();
+    }
+
+    function populateModalData() {
+      const isCoach = currentModalType === 'coach';
+      const item = isCoach ? COACHES[currentModalIndex] : VIP_VOICES[currentModalIndex];
+      const total = isCoach ? COACHES.length : VIP_VOICES.length;
+      const idxStr = (currentModalIndex + 1 < 10 ? '0' : '') + (currentModalIndex + 1);
+      const totalStr = (total < 10 ? '0' : '') + total;
+
+      document.getElementById('modal-counter-top').textContent = `${idxStr} / ${totalStr}`;
+      document.getElementById('modal-counter-bottom').textContent = `${isCoach ? 'COACH' : 'VIP'} ${idxStr} / ${totalStr}`;
+
+      const modalImg = document.getElementById('modal-img');
+      modalImg.style.display = 'block';
+      modalImg.style.visibility = 'visible';
+      const imgContainer = modalImg.parentElement;
+      if (imgContainer) {
+        imgContainer.querySelectorAll('.img-fallback-block').forEach(el => el.remove());
+      }
+
+      if (isCoach) {
+        document.getElementById('modal-badge').textContent = 'MOMENTUM COACHING ROSTER';
+        modalImg.src = item.image;
+        modalImg.alt = `${item.firstName} ${item.lastName}`;
+        document.getElementById('modal-img-role').textContent = item.role;
+        document.getElementById('modal-img-name').textContent = `${item.firstName} ${item.lastName}`;
+
+        document.getElementById('modal-name').innerHTML = `${item.firstName} ${item.lastName}<span class="text-[#F97316]">.</span>`;
+        document.getElementById('modal-role').textContent = item.subRole;
+        document.getElementById('modal-bio').textContent = item.bio;
+
+        // Stats
+        document.getElementById('modal-stat-1').textContent = item.specialty;
+        document.getElementById('modal-stat-2').textContent = item.qualification;
+        document.getElementById('modal-stat-3').textContent = item.mantra;
+
+        // Action Bars
+        document.getElementById('modal-train-text').textContent = `TRAIN WITH ${item.firstName} ${item.lastName}`;
+        document.getElementById('modal-action-train').href = `https://wa.me/919384207764?text=${encodeURIComponent('Hi Momentum, I would like to book training with Coach ' + item.firstName + ' ' + item.lastName)}`;
+
+        const socialBtn = document.getElementById('modal-action-social');
+        const socialIcon = document.getElementById('modal-social-icon');
+        const socialText = document.getElementById('modal-social-text');
+
+        if (item.socialType === 'instagram') {
+          socialIcon.className = 'fa-brands fa-instagram text-[#F97316]';
+          socialText.textContent = item.socialText;
+          socialBtn.href = item.socialUrl;
+        } else {
+          socialIcon.className = 'fa-solid fa-phone text-[#F97316]';
+          socialText.textContent = 'CALL THE STUDIO (+91 9384207764)';
+          socialBtn.href = 'tel:+919384207764';
+        }
+      } else {
+        // VIP Voice
+        document.getElementById('modal-badge').textContent = 'VIP ATHLETE & TRAINEE';
+        modalImg.src = item.avatar || ASSETS.hyrox2;
+        modalImg.alt = item.name;
+        document.getElementById('modal-img-role').textContent = item.role;
+        document.getElementById('modal-img-name').textContent = item.name;
+
+        document.getElementById('modal-name').innerHTML = `${item.name}<span class="text-[#F97316]">.</span>`;
+        document.getElementById('modal-role').textContent = item.role;
+        document.getElementById('modal-bio').textContent = item.quote;
+
+        // Stats
+        document.getElementById('modal-stat-1').textContent = item.statLabel;
+        document.getElementById('modal-stat-2').textContent = item.statVal;
+        document.getElementById('modal-stat-3').textContent = item.highlight;
+
+        // Actions
+        document.getElementById('modal-train-text').textContent = `ENQUIRE ABOUT S&C SESSIONS`;
+        document.getElementById('modal-action-train').href = `https://wa.me/919384207764?text=${encodeURIComponent('Hi Momentum, I was inspired by ' + item.name + ' and want to enquire about training.')}`;
+
+        const socialBtn = document.getElementById('modal-action-social');
+        const socialIcon = document.getElementById('modal-social-icon');
+        const socialText = document.getElementById('modal-social-text');
+        socialIcon.className = 'fa-solid fa-calendar-check text-[#F97316]';
+        socialText.textContent = 'BOOK FREE TRIAL AT MRC NAGAR';
+        socialBtn.href = '#booker';
+        socialBtn.onclick = () => { closeProfileModal(); };
+      }
+    }
+
+    // Keyboard navigation & Esc key handler
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('profile-modal');
+      if (modal.classList.contains('hidden-modal')) return;
+      if (e.key === 'Escape') closeProfileModal();
+      if (e.key === 'ArrowLeft') navigateModal(-1);
+      if (e.key === 'ArrowRight') navigateModal(1);
+    });
+
+    /* ----------------------------------------------------
+       11. TRIAL BOOKER CONTROLS
+    ---------------------------------------------------- */
+    let selectedDay = 'WEEKDAY';
+    let selectedSlot = '10:00 AM';
+
+    function selectBookingDay(day, btn) {
+      selectedDay = day;
+      document.querySelectorAll('.booking-day-btn').forEach(b => {
+        b.className = 'booking-day-btn py-3.5 rounded-xl border border-white/10 bg-[#0B0E17] text-white hover:border-[#F97316]/50 font-mono text-xs font-bold uppercase tracking-wider transition-all min-h-[48px]';
+      });
+      btn.className = 'booking-day-btn active py-3.5 rounded-xl border border-[#F97316] bg-[#F97316] text-[#0B0E17] font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(249,115,22,0.4)] min-h-[48px]';
+    }
+
+    function selectBookingSlot(slot, btn) {
+      selectedSlot = slot;
+      document.querySelectorAll('.booking-slot-btn').forEach(b => {
+        b.className = 'booking-slot-btn py-3.5 rounded-xl border border-white/10 bg-[#0B0E17] text-white hover:border-[#F97316]/50 font-mono text-xs font-bold uppercase tracking-wider transition-all min-h-[48px]';
+      });
+      btn.className = 'booking-slot-btn active py-3.5 rounded-xl border border-[#F97316] bg-[#F97316] text-[#0B0E17] font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(249,115,22,0.4)] min-h-[48px]';
+    }
+
+    function handleBookingSubmit(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('booking-name');
+      const goalSelect = document.getElementById('booking-goal');
+      const errSpan = document.getElementById('name-error');
+
+      const name = nameInput.value.trim();
+      if (!name) {
+        errSpan.classList.remove('hidden');
+        nameInput.classList.add('border-[#E11D48]');
+        return;
+      }
+      errSpan.classList.add('hidden');
+      nameInput.classList.remove('border-[#E11D48]');
+
+      const goal = goalSelect.value;
+      const message = `Hello Momentum Studio! I would like to book a trial session.\nName: ${name}\nPreferred Day: ${selectedDay}\nPreferred Slot: ${selectedSlot}\nPrimary Objective: ${goal}\nLocation: MRC Nagar, Chennai`;
+      const url = `https://wa.me/919384207764?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank');
+    }
+
+    function handleLoopSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loop-email').value.trim();
+      if (!email) return;
+      const msg = `Hi Momentum Studio, please add my email ${email} to the newsletter list for HYROX simulations and Stride run club schedules.`;
+      window.open(`https://wa.me/919384207764?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    /* ----------------------------------------------------
+       12. CUSTOM CURSOR & "M" CHEVRON TOUCH BADGE
+    ---------------------------------------------------- */
+    function initCustomCursor() {
+      const cursorRing = document.getElementById('cursor-ring');
+      const canvas = document.getElementById('trail-canvas');
+      if (!cursorRing) return;
+
+      const hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+      let ringX = mouseX;
+      let ringY = mouseY;
+      let isVisible = hasFinePointer;
+
+      let ctx = null;
+      if (canvas && hasFinePointer) {
+        ctx = canvas.getContext('2d');
+        function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+      }
+
+      const points = [];
+      const MAX_POINTS = 22;
+
+      // Desktop Mouse Event Tracking
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        if (!isVisible) {
+          isVisible = true;
+          cursorRing.style.opacity = '1';
+        }
+      });
+
+      // Mobile Touch Follower Badge Tracking
+      let touchTimeout = null;
+      window.addEventListener('touchstart', (e) => {
+        if (!e.touches.length) return;
+        const touch = e.touches[0];
+        mouseX = touch.clientX;
+        mouseY = touch.clientY;
+        ringX = mouseX;
+        ringY = mouseY;
+        cursorRing.classList.add('touch-active');
+        cursorRing.style.opacity = '1';
+        clearTimeout(touchTimeout);
+
+        const cardTarget = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.coach-card, .clean-image-card, .track-stack-card, .vip-card, .archive-card');
+        if (cardTarget) {
+          document.body.classList.add('is-card-hover');
+        } else {
+          document.body.classList.remove('is-card-hover');
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!e.touches.length) return;
+        const touch = e.touches[0];
+        mouseX = touch.clientX;
+        mouseY = touch.clientY;
+        cursorRing.classList.add('touch-active');
+        cursorRing.style.opacity = '1';
+
+        const cardTarget = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.coach-card, .clean-image-card, .track-stack-card, .vip-card, .archive-card');
+        if (cardTarget) {
+          document.body.classList.add('is-card-hover');
+        } else {
+          document.body.classList.remove('is-card-hover');
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        touchTimeout = setTimeout(() => {
+          cursorRing.classList.remove('touch-active');
+          if (!hasFinePointer) {
+            cursorRing.style.opacity = '0';
+          }
+          document.body.classList.remove('is-card-hover');
+        }, 1200);
+      }, { passive: true });
+
+      const interactiveSelector = 'a, button, input, select, [role="button"], .interactive';
+      document.body.addEventListener('mouseover', (e) => {
+        const target = e.target.closest(interactiveSelector);
+        const cardTarget = e.target.closest('.coach-card, .clean-image-card, .track-stack-card, .vip-card, .archive-card');
+
+        if (cardTarget) {
+          document.body.classList.add('is-card-hover');
+          if (canvas) canvas.style.opacity = '0';
+        } else if (target) {
+          document.body.classList.add('is-hovering');
+          document.body.classList.remove('is-card-hover');
+          if (canvas) canvas.style.opacity = '1';
+        } else {
+          document.body.classList.remove('is-hovering', 'is-card-hover');
+          if (canvas) canvas.style.opacity = '1';
+        }
+      });
+
+      function renderLoop() {
+        ringX += (mouseX - ringX) * 0.22;
+        ringY += (mouseY - ringY) * 0.22;
+        cursorRing.style.left = `${ringX}px`;
+        cursorRing.style.top = `${ringY}px`;
+
+        if (ctx && hasFinePointer) {
+          points.push({ x: mouseX, y: mouseY });
+          if (points.length > MAX_POINTS) points.shift();
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (points.length > 2 && canvas.style.opacity !== '0') {
+            for (let i = 1; i < points.length; i++) {
+              const p1 = points[i - 1];
+              const p2 = points[i];
+              const progress = i / points.length;
+
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.strokeStyle = `rgba(249, 115, 22, ${progress * 0.65})`;
+              ctx.lineWidth = progress * 7;
+              ctx.lineCap = 'round';
+              ctx.shadowBlur = 12;
+              ctx.shadowColor = '#F97316';
+              ctx.stroke();
+            }
+          }
+        }
+
+        requestAnimationFrame(renderLoop);
+      }
+      renderLoop();
+    }
+
+    /* ----------------------------------------------------
+       13. COLE NAVARRO KINETIC BOUNCING TYPOGRAPHY ENGINE
+    ---------------------------------------------------- */
+    function initKineticTypography() {
+      if (typeof gsap === 'undefined') return;
+
+      const bounceSelectors = [
+        '#navbar a',
+        '#navbar button',
+        '.btn-orange',
+        '.btn-circle-arrow',
+        '#coaches h2',
+        '#archive h2',
+        '#movement h2',
+        '#belief h2',
+        '#next-session h2',
+        '#tracks h2',
+        '#vip-voices h2',
+        '#about h2',
+        '#hero-title',
+        '.booking-slot-btn',
+        '.booking-day-btn',
+        '#mobile-menu-btn'
+      ];
+
+      const elements = document.querySelectorAll(bounceSelectors.join(', '));
+      elements.forEach((el) => {
+        // Hover bounce: y: -6px to 0px, ease: back.out(2)
+        el.addEventListener('mouseenter', () => {
+          gsap.fromTo(el, 
+            { y: -6 }, 
+            { y: 0, duration: 0.4, ease: 'back.out(2)', overwrite: 'auto' }
+          );
+        });
+        // Click bounce
+        el.addEventListener('click', () => {
+          gsap.fromTo(el, 
+            { scale: 0.95, y: -4 }, 
+            { scale: 1, y: 0, duration: 0.45, ease: 'back.out(2.5)', overwrite: 'auto' }
+          );
+        });
+      });
+    }
+  </script>
+</body>
+</html>
