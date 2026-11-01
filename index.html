@@ -340,10 +340,12 @@
     .clean-image-card.active img,
     .coach-card:hover img,
     .coach-card.active img,
+    .coach-card.is-active-touch img,
     .archive-card:hover img,
     .archive-card.active img,
     .archive-card.active-focus img,
     .archive-card.in-view img,
+    .archive-card.is-active-touch img,
     .vip-card:hover img,
     .track-stack-card:hover img,
     .track-stack-card.active img {
@@ -356,6 +358,7 @@
       will-change: transform;
     }
     .archive-card.active-focus,
+    .archive-card.is-active-touch,
     .archive-card:hover {
       border-color: #F97316 !important;
       box-shadow: 0 0 35px rgba(249, 115, 22, 0.45) !important;
@@ -383,10 +386,14 @@
       z-index: 6;
     }
     .archive-card:hover .archive-duotone-color,
+    .archive-card.active-focus .archive-duotone-color,
+    .archive-card.is-active-touch .archive-duotone-color,
     .archive-card.active .archive-duotone-color {
       opacity: 0.5;
     }
     .archive-card:hover .archive-duotone-glow,
+    .archive-card.active-focus .archive-duotone-glow,
+    .archive-card.is-active-touch .archive-duotone-glow,
     .archive-card.active .archive-duotone-glow {
       opacity: 0.85;
     }
@@ -410,7 +417,8 @@
     .scrollbar-none::-webkit-scrollbar {
       display: none;
     }
-    .-webkit-overflow-scrolling-touch {
+    #lineup-scroll-container, #archive-scroll-container {
+      scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
     }
 
@@ -913,10 +921,10 @@
             <span>09</span>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="scrollLineup(-1)" aria-label="Previous Coach" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
+            <button id="lineup-prev" onclick="scrollLineup(-1)" aria-label="Previous Coach" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
               <i class="fa-solid fa-arrow-left"></i>
             </button>
-            <button onclick="scrollLineup(1)" aria-label="Next Coach" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
+            <button id="lineup-next" onclick="scrollLineup(1)" aria-label="Next Coach" class="w-12 h-12 rounded-xl bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center transition-colors min-h-[48px] min-w-[48px]">
               <i class="fa-solid fa-arrow-right"></i>
             </button>
           </div>
@@ -925,8 +933,8 @@
     </div>
 
     <!-- Flush Horizontal Carousel of 9 Coaches (Smooth Gliding & Drag) -->
-    <div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-4 px-4 py-2 -webkit-overflow-scrolling-touch touch-pan-x min-w-full select-none cursor-grab active:cursor-grabbing" id="lineup-scroll-container">
-      <div id="coaches-track" class="flex gap-4 px-4 sm:px-8 md:px-12 w-max items-stretch">
+    <div id="lineup-scroll-container" class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-6 px-4 sm:px-12 py-6 -webkit-overflow-scrolling-touch touch-pan-x w-full select-none cursor-grab active:cursor-grabbing">
+      <div id="coaches-track" class="contents">
         <!-- Coach cards will be injected by JavaScript using COACHES array -->
       </div>
     </div>
@@ -988,8 +996,8 @@
     </div>
 
     <!-- Horizontal Staggered Visual Row with Gliding (Mobile-First Snap) -->
-    <div id="archive-scroll-container" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-4 px-4 py-2 -webkit-overflow-scrolling-touch touch-pan-x min-w-full select-none cursor-grab active:cursor-grabbing pb-6">
-      <div id="archive-track" class="flex gap-4 sm:gap-6 px-4 sm:px-8 md:px-12 w-max items-start">
+    <div id="archive-scroll-container" class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-6 px-4 sm:px-12 py-6 -webkit-overflow-scrolling-touch touch-pan-x w-full select-none cursor-grab active:cursor-grabbing">
+      <div id="archive-track" class="contents">
         <!-- Injected via ARCHIVE data -->
       </div>
     </div>
@@ -1000,10 +1008,10 @@
         <div id="archive-progress-bar" class="h-full bg-[#F97316] w-0 transition-all duration-150"></div>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="scrollArchive(-1)" aria-label="Archive Previous" class="w-10 h-10 rounded-lg bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center text-xs min-h-[44px] min-w-[44px]">
+        <button id="archive-prev" onclick="scrollArchive(-1)" aria-label="Archive Previous" class="w-10 h-10 rounded-lg bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center text-xs min-h-[44px] min-w-[44px]">
           <i class="fa-solid fa-arrow-left"></i>
         </button>
-        <button onclick="scrollArchive(1)" aria-label="Archive Next" class="w-10 h-10 rounded-lg bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center text-xs min-h-[44px] min-w-[44px]">
+        <button id="archive-next" onclick="scrollArchive(1)" aria-label="Archive Next" class="w-10 h-10 rounded-lg bg-[#131824] hover:bg-[#1A2234] border border-white/10 text-white flex items-center justify-center text-xs min-h-[44px] min-w-[44px]">
           <i class="fa-solid fa-arrow-right"></i>
         </button>
       </div>
@@ -1977,6 +1985,17 @@
       try { enableHorizontalWheelScroll('archive-scroll-container'); } catch (e) {}
       try { enableHorizontalWheelScroll('voices-scroll-container'); } catch (e) {}
       try { initKineticTypography(); } catch (e) { console.error('Kinetic typography init error:', e); }
+      try {
+        const lp = document.getElementById('lineup-prev');
+        const ln = document.getElementById('lineup-next');
+        if (lp) lp.onclick = () => scrollLineup(-1);
+        if (ln) ln.onclick = () => scrollLineup(1);
+
+        const ap = document.getElementById('archive-prev');
+        const an = document.getElementById('archive-next');
+        if (ap) ap.onclick = () => scrollArchive(-1);
+        if (an) an.onclick = () => scrollArchive(1);
+      } catch (e) {}
     }
 
     if (document.readyState === 'loading') {
@@ -2045,7 +2064,7 @@
 
       COACHES.forEach((coach, idx) => {
         const card = document.createElement('div');
-        card.className = 'coach-card clean-image-card flex-shrink-0 w-[82vw] sm:w-[320px] snap-center group relative overflow-hidden bg-[#131824] rounded-2xl cursor-pointer transition-all duration-300 border border-white/10 hover:border-[#F97316]/60 hover:shadow-[0_0_35px_rgba(249,115,22,0.35)]';
+        card.className = 'coach-card clean-image-card flex-shrink-0 w-[85vw] min-w-[280px] sm:w-[340px] snap-center transition-all duration-500 transform hover:-translate-y-2 group relative overflow-hidden bg-[#131824] rounded-2xl cursor-pointer border border-white/10 hover:border-[#F97316]/60 hover:shadow-[0_0_35px_rgba(249,115,22,0.35)]';
         card.style.aspectRatio = '3 / 4.1';
         card.setAttribute('data-index', idx);
         card.onclick = () => openProfileModal('coach', idx);
@@ -2053,6 +2072,10 @@
           coachAutoScrollActive = false;
           clearTimeout(coachAutoScrollTimer);
           coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3000);
+          document.querySelectorAll('.coach-card.is-active-touch').forEach(c => {
+            if (c !== card) c.classList.remove('is-active-touch');
+          });
+          card.classList.add('is-active-touch');
         }, { passive: true });
 
         card.innerHTML = `
@@ -2141,8 +2164,9 @@
       coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3500);
 
       const container = document.getElementById('lineup-scroll-container');
-      const cardWidth = container.querySelector('.coach-card')?.offsetWidth || 320;
-      container.scrollBy({ left: direction * (cardWidth + 16), behavior: 'smooth' });
+      if (container) {
+        container.scrollBy({ left: direction * 360, behavior: 'smooth' });
+      }
     }
 
     /* ----------------------------------------------------
@@ -2208,9 +2232,16 @@
       ARCHIVE_ITEMS.forEach((item, idx) => {
         const offsetClass = idx % 2 === 1 ? 'mt-3 sm:mt-6' : 'mt-0';
         const card = document.createElement('div');
-        card.className = `archive-card flex-shrink-0 w-[78vw] sm:w-[280px] snap-center relative rounded-2xl overflow-hidden border border-white/10 ${offsetClass} transition-all duration-500 group cursor-pointer shadow-xl bg-[#0B0E17] hover:border-[#F97316] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]`;
-        card.style.aspectRatio = '3 / 4.6';
+        card.className = 'archive-card flex-shrink-0 w-[80vw] min-w-[260px] sm:w-[300px] h-[420px] sm:h-[480px] snap-center rounded-2xl overflow-hidden shadow-2xl relative group cursor-pointer border border-white/10 transition-all duration-500 bg-[#0B0E17] hover:border-[#F97316] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]';
         card.setAttribute('tabindex', '0');
+
+        // GSAP Zoom pulse on card hover
+        card.addEventListener('mouseenter', () => {
+          gsap.fromTo(card, 
+            { scale: 1.0 }, 
+            { scale: 1.04, duration: 0.4, yoyo: true, repeat: 1, ease: 'sine.inOut', overwrite: 'auto' }
+          );
+        });
 
         // Touch/tap trigger for B&W-to-color transition and zoom-scale pulse on mobile
         card.addEventListener('touchstart', () => {
@@ -2218,16 +2249,16 @@
           clearTimeout(archiveAutoScrollTimer);
           archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3000);
 
-          document.querySelectorAll('.archive-card.active-focus').forEach(c => {
+          document.querySelectorAll('.archive-card.is-active-touch').forEach(c => {
             if (c !== card) {
-              c.classList.remove('active-focus');
+              c.classList.remove('is-active-touch');
               gsap.to(c, { scale: 1.0, duration: 0.35, ease: 'power2.out' });
             }
           });
-          card.classList.add('active-focus');
+          card.classList.add('is-active-touch');
           gsap.fromTo(card, 
             { scale: 1.0 }, 
-            { scale: 1.06, duration: 0.45, yoyo: true, repeat: 1, ease: 'sine.inOut' }
+            { scale: 1.04, duration: 0.45, yoyo: true, repeat: 1, ease: 'sine.inOut', overwrite: 'auto' }
           );
         }, { passive: true });
 
@@ -2310,8 +2341,9 @@
       archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3500);
 
       const container = document.getElementById('archive-scroll-container');
-      const cardWidth = container.querySelector('.archive-card')?.offsetWidth || 300;
-      container.scrollBy({ left: dir * (cardWidth + 24), behavior: 'smooth' });
+      if (container) {
+        container.scrollBy({ left: dir * 320, behavior: 'smooth' });
+      }
     }
 
     // Smooth Zoom-In / Zoom-Out scale pulse on scroll focus / hover
@@ -2444,15 +2476,22 @@
       container.addEventListener('mousedown', (e) => {
         isDown = true;
         hasDragged = false;
+        container.style.cursor = 'grabbing';
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
       });
-      container.addEventListener('mouseleave', () => isDown = false);
-      container.addEventListener('mouseup', () => isDown = false);
+      container.addEventListener('mouseleave', () => {
+        isDown = false;
+        container.style.cursor = '';
+      });
+      container.addEventListener('mouseup', () => {
+        isDown = false;
+        container.style.cursor = '';
+      });
       container.addEventListener('mousemove', (e) => {
         if (!isDown) return;
         const x = e.pageX - container.offsetLeft;
-        const walk = (x - startX) * 1.5;
+        const walk = (x - startX) * 1.6;
         if (Math.abs(walk) > 4) {
           hasDragged = true;
           e.preventDefault();

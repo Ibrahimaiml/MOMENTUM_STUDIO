@@ -140,10 +140,12 @@ body {
 .clean-image-card.active img,
 .coach-card:hover img,
 .coach-card.active img,
+.coach-card.is-active-touch img,
 .archive-card:hover img,
 .archive-card.active img,
 .archive-card.active-focus img,
 .archive-card.in-view img,
+.archive-card.is-active-touch img,
 .vip-card:hover img,
 .track-stack-card:hover img,
 .track-stack-card.active img {
@@ -156,6 +158,7 @@ body {
   will-change: transform;
 }
 .archive-card.active-focus,
+.archive-card.is-active-touch,
 .archive-card:hover {
   border-color: #F97316 !important;
   box-shadow: 0 0 35px rgba(249, 115, 22, 0.45) !important;
@@ -199,7 +202,8 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
-.-webkit-overflow-scrolling-touch {
+#lineup-scroll-container, #archive-scroll-container {
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
