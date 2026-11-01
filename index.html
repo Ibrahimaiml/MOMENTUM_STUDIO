@@ -418,7 +418,7 @@
       display: none;
     }
 
-    /* Explicit Mobile Touch Scroll CSS (High-Priority Overrides) */
+    /* Section 03 & 05 Track Container Overrides */
     #lineup-scroll-container,
     #archive-scroll-container {
       display: flex !important;
@@ -426,16 +426,19 @@
       flex-wrap: nowrap !important;
       overflow-x: auto !important;
       overflow-y: hidden !important;
+      width: 100% !important;
       touch-action: pan-x pan-y !important;
       -webkit-overflow-scrolling: touch !important;
       scroll-snap-type: x mandatory !important;
       scroll-behavior: smooth !important;
     }
 
+    /* Force children not to shrink */
     #lineup-scroll-container > *,
     #archive-scroll-container > *,
     #lineup-scroll-container .coach-card,
     #archive-scroll-container .archive-card {
+      flex: 0 0 auto !important;
       flex-shrink: 0 !important;
       scroll-snap-align: center !important;
     }
@@ -917,7 +920,7 @@
   <!-- ================================================== -->
   <!-- 5. "03 LINEUP" — MEET THE COACHES. (9 Coaches)     -->
   <!-- ================================================== -->
-  <section id="coaches" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06]">
+  <section id="coaches" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06] overflow-visible">
     <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mb-10">
       <!-- Section Header -->
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -993,7 +996,7 @@
   <!-- ================================================== -->
   <!-- 7. "05 VISUAL ARCHIVE" — THROUGH OUR LENS.         -->
   <!-- ================================================== -->
-  <section id="archive" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06] overflow-x-clip">
+  <section id="archive" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06] overflow-visible">
     <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mb-12">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
@@ -2144,6 +2147,8 @@
         if (coachAutoScrollActive) {
           const maxScroll = container.scrollWidth - container.clientWidth;
           if (maxScroll > 10) {
+            container.style.setProperty('scroll-behavior', 'auto', 'important');
+            container.style.setProperty('scroll-snap-type', 'none', 'important');
             if (container.scrollLeft >= maxScroll - 2) {
               container.scrollLeft = 0; // Loop wrap seamlessly
             } else {
@@ -2155,32 +2160,41 @@
       }
       requestAnimationFrame(autoScrollLoop);
 
+      function pauseCoachAutoScroll() {
+        coachAutoScrollActive = false;
+        container.style.removeProperty('scroll-behavior');
+        container.style.removeProperty('scroll-snap-type');
+      }
+
+      function resumeCoachAutoScroll(delay = 2500) {
+        clearTimeout(coachAutoScrollTimer);
+        coachAutoScrollTimer = setTimeout(() => {
+          coachAutoScrollActive = true;
+        }, delay);
+      }
+
       // Smooth pause on hover
-      container.addEventListener('mouseenter', () => { coachAutoScrollActive = false; });
-      container.addEventListener('mouseleave', () => { coachAutoScrollActive = true; });
+      container.addEventListener('mouseenter', pauseCoachAutoScroll);
+      container.addEventListener('mouseleave', () => resumeCoachAutoScroll(800));
 
       // Pause during touch swipe / drag interactions and resume after delay
-      container.addEventListener('touchstart', () => { coachAutoScrollActive = false; }, { passive: true });
-      container.addEventListener('touchend', () => {
-        clearTimeout(coachAutoScrollTimer);
-        coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 2500);
-      }, { passive: true });
-      container.addEventListener('mousedown', () => { coachAutoScrollActive = false; });
-      container.addEventListener('mouseup', () => {
-        clearTimeout(coachAutoScrollTimer);
-        coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 2500);
-      });
+      container.addEventListener('touchstart', pauseCoachAutoScroll, { passive: true });
+      container.addEventListener('touchend', () => resumeCoachAutoScroll(2500), { passive: true });
+      container.addEventListener('touchcancel', () => resumeCoachAutoScroll(2500), { passive: true });
+      container.addEventListener('mousedown', pauseCoachAutoScroll);
+      container.addEventListener('mouseup', () => resumeCoachAutoScroll(2500));
     }
 
     function scrollLineup(direction) {
       coachAutoScrollActive = false;
-      clearTimeout(coachAutoScrollTimer);
-      coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3500);
-
       const container = document.getElementById('lineup-scroll-container');
       if (container) {
+        container.style.removeProperty('scroll-behavior');
+        container.style.removeProperty('scroll-snap-type');
         container.scrollBy({ left: direction * 360, behavior: 'smooth' });
       }
+      clearTimeout(coachAutoScrollTimer);
+      coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3500);
     }
 
     /* ----------------------------------------------------
@@ -2321,6 +2335,8 @@
         if (archiveAutoScrollActive) {
           const maxScroll = container.scrollWidth - container.clientWidth;
           if (maxScroll > 10) {
+            container.style.setProperty('scroll-behavior', 'auto', 'important');
+            container.style.setProperty('scroll-snap-type', 'none', 'important');
             if (container.scrollLeft >= maxScroll - 2) {
               container.scrollLeft = 0; // Seamless loop wrap
             } else {
@@ -2332,32 +2348,41 @@
       }
       requestAnimationFrame(autoScrollLoop);
 
+      function pauseArchiveAutoScroll() {
+        archiveAutoScrollActive = false;
+        container.style.removeProperty('scroll-behavior');
+        container.style.removeProperty('scroll-snap-type');
+      }
+
+      function resumeArchiveAutoScroll(delay = 2500) {
+        clearTimeout(archiveAutoScrollTimer);
+        archiveAutoScrollTimer = setTimeout(() => {
+          archiveAutoScrollActive = true;
+        }, delay);
+      }
+
       // Smooth pause on hover
-      container.addEventListener('mouseenter', () => { archiveAutoScrollActive = false; });
-      container.addEventListener('mouseleave', () => { archiveAutoScrollActive = true; });
+      container.addEventListener('mouseenter', pauseArchiveAutoScroll);
+      container.addEventListener('mouseleave', () => resumeArchiveAutoScroll(800));
 
       // Pause during touch swipe / drag interactions and resume after delay
-      container.addEventListener('touchstart', () => { archiveAutoScrollActive = false; }, { passive: true });
-      container.addEventListener('touchend', () => {
-        clearTimeout(archiveAutoScrollTimer);
-        archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 2500);
-      }, { passive: true });
-      container.addEventListener('mousedown', () => { archiveAutoScrollActive = false; });
-      container.addEventListener('mouseup', () => {
-        clearTimeout(archiveAutoScrollTimer);
-        archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 2500);
-      });
+      container.addEventListener('touchstart', pauseArchiveAutoScroll, { passive: true });
+      container.addEventListener('touchend', () => resumeArchiveAutoScroll(2500), { passive: true });
+      container.addEventListener('touchcancel', () => resumeArchiveAutoScroll(2500), { passive: true });
+      container.addEventListener('mousedown', pauseArchiveAutoScroll);
+      container.addEventListener('mouseup', () => resumeArchiveAutoScroll(2500));
     }
 
     function scrollArchive(dir) {
       archiveAutoScrollActive = false;
-      clearTimeout(archiveAutoScrollTimer);
-      archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3500);
-
       const container = document.getElementById('archive-scroll-container');
       if (container) {
+        container.style.removeProperty('scroll-behavior');
+        container.style.removeProperty('scroll-snap-type');
         container.scrollBy({ left: dir * 320, behavior: 'smooth' });
       }
+      clearTimeout(archiveAutoScrollTimer);
+      archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3500);
     }
 
     // Smooth Zoom-In / Zoom-Out scale pulse on scroll focus / hover
@@ -2491,16 +2516,26 @@
         isDown = true;
         hasDragged = false;
         container.style.cursor = 'grabbing';
+        container.style.setProperty('scroll-behavior', 'auto', 'important');
+        container.style.setProperty('scroll-snap-type', 'none', 'important');
         startX = e.pageX - container.offsetLeft;
         scrollLeft = container.scrollLeft;
       });
       container.addEventListener('mouseleave', () => {
-        isDown = false;
-        container.style.cursor = '';
+        if (isDown) {
+          isDown = false;
+          container.style.cursor = '';
+          container.style.removeProperty('scroll-behavior');
+          container.style.removeProperty('scroll-snap-type');
+        }
       });
       container.addEventListener('mouseup', () => {
-        isDown = false;
-        container.style.cursor = '';
+        if (isDown) {
+          isDown = false;
+          container.style.cursor = '';
+          container.style.removeProperty('scroll-behavior');
+          container.style.removeProperty('scroll-snap-type');
+        }
       });
       container.addEventListener('mousemove', (e) => {
         if (!isDown) return;
@@ -2525,6 +2560,15 @@
       container.addEventListener('wheel', (e) => {
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
           e.preventDefault();
+          if (containerId === 'lineup-scroll-container') {
+            coachAutoScrollActive = false;
+            clearTimeout(coachAutoScrollTimer);
+            coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 2500);
+          } else if (containerId === 'archive-scroll-container') {
+            archiveAutoScrollActive = false;
+            clearTimeout(archiveAutoScrollTimer);
+            archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 2500);
+          }
           container.scrollBy({
             left: e.deltaY * 1.2,
             behavior: 'auto'

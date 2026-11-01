@@ -202,7 +202,7 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
-/* Explicit Mobile Touch Scroll CSS (High-Priority Overrides) */
+/* Section 03 & 05 Track Container Overrides */
 #lineup-scroll-container,
 #archive-scroll-container {
   display: flex !important;
@@ -210,16 +210,19 @@ body {
   flex-wrap: nowrap !important;
   overflow-x: auto !important;
   overflow-y: hidden !important;
+  width: 100% !important;
   touch-action: pan-x pan-y !important;
   -webkit-overflow-scrolling: touch !important;
   scroll-snap-type: x mandatory !important;
   scroll-behavior: smooth !important;
 }
 
+/* Force children not to shrink */
 #lineup-scroll-container > *,
 #archive-scroll-container > *,
 #lineup-scroll-container .coach-card,
 #archive-scroll-container .archive-card {
+  flex: 0 0 auto !important;
   flex-shrink: 0 !important;
   scroll-snap-align: center !important;
 }
