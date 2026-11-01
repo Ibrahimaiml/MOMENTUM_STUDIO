@@ -402,6 +402,18 @@
       outline: none;
     }
 
+    /* Scrollbar None & Touch Pan Utility (Mobile & Desktop) */
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .-webkit-overflow-scrolling-touch {
+      -webkit-overflow-scrolling: touch;
+    }
+
     /* Smooth horizontal scroll setups */
     .smooth-horizontal-scroll {
       scroll-snap-type: x mandatory;
@@ -913,8 +925,8 @@
     </div>
 
     <!-- Flush Horizontal Carousel of 9 Coaches (Smooth Gliding & Drag) -->
-    <div class="w-full overflow-x-auto smooth-horizontal-scroll select-none cursor-grab active:cursor-grabbing" id="lineup-scroll-container">
-      <div id="coaches-track" class="flex gap-4 px-4 sm:px-8 md:px-12 w-max">
+    <div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-4 px-4 py-2 -webkit-overflow-scrolling-touch touch-pan-x min-w-full select-none cursor-grab active:cursor-grabbing" id="lineup-scroll-container">
+      <div id="coaches-track" class="flex gap-4 px-4 sm:px-8 md:px-12 w-max items-stretch">
         <!-- Coach cards will be injected by JavaScript using COACHES array -->
       </div>
     </div>
@@ -957,7 +969,7 @@
   <!-- ================================================== -->
   <!-- 7. "05 VISUAL ARCHIVE" — THROUGH OUR LENS.         -->
   <!-- ================================================== -->
-  <section id="archive" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06] overflow-hidden">
+  <section id="archive" class="relative z-10 bg-[#0B0E17] py-28 border-t border-white/[0.06] overflow-x-clip">
     <div class="max-w-7xl mx-auto px-4 sm:px-8 md:px-12 mb-12">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
@@ -975,9 +987,9 @@
       </div>
     </div>
 
-    <!-- Horizontal Staggered Visual Row with Gliding -->
-    <div id="archive-scroll-container" class="w-full overflow-x-auto smooth-horizontal-scroll select-none cursor-grab active:cursor-grabbing pb-6">
-      <div id="archive-track" class="flex gap-6 px-4 sm:px-8 md:px-12 w-max items-start">
+    <!-- Horizontal Staggered Visual Row with Gliding (Mobile-First Snap) -->
+    <div id="archive-scroll-container" class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-4 px-4 py-2 -webkit-overflow-scrolling-touch touch-pan-x min-w-full select-none cursor-grab active:cursor-grabbing pb-6">
+      <div id="archive-track" class="flex gap-4 sm:gap-6 px-4 sm:px-8 md:px-12 w-max items-start">
         <!-- Injected via ARCHIVE data -->
       </div>
     </div>
@@ -1099,8 +1111,8 @@
     </div>
 
     <!-- Horizontal Gliding Track for Testimonials -->
-    <div class="w-full overflow-x-auto smooth-horizontal-scroll select-none cursor-grab active:cursor-grabbing pb-6" id="voices-scroll-container">
-      <div id="voices-track" class="flex gap-6 px-4 sm:px-8 md:px-12 w-max">
+    <div class="flex overflow-x-auto snap-x snap-mandatory scrollbar-none space-x-4 px-4 py-2 -webkit-overflow-scrolling-touch touch-pan-x min-w-full select-none cursor-grab active:cursor-grabbing pb-6" id="voices-scroll-container">
+      <div id="voices-track" class="flex gap-4 sm:gap-6 px-4 sm:px-8 md:px-12 w-max">
         <!-- Rendered dynamically from VIP_VOICES array -->
       </div>
     </div>
@@ -2033,11 +2045,15 @@
 
       COACHES.forEach((coach, idx) => {
         const card = document.createElement('div');
-        card.className = 'coach-card clean-image-card group relative overflow-hidden bg-[#131824] rounded-2xl cursor-pointer transition-all duration-300 border border-white/10 hover:border-[#F97316]/60 hover:shadow-[0_0_30px_rgba(249,115,22,0.25)]';
-        card.style.width = 'clamp(280px, 24vw, 360px)';
+        card.className = 'coach-card clean-image-card flex-shrink-0 w-[82vw] sm:w-[320px] snap-center group relative overflow-hidden bg-[#131824] rounded-2xl cursor-pointer transition-all duration-300 border border-white/10 hover:border-[#F97316]/60 hover:shadow-[0_0_35px_rgba(249,115,22,0.35)]';
         card.style.aspectRatio = '3 / 4.1';
         card.setAttribute('data-index', idx);
         card.onclick = () => openProfileModal('coach', idx);
+        card.addEventListener('touchstart', () => {
+          coachAutoScrollActive = false;
+          clearTimeout(coachAutoScrollTimer);
+          coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3000);
+        }, { passive: true });
 
         card.innerHTML = `
           <img src="${coach.image}" alt="${coach.firstName} ${coach.lastName}" onerror="handleImgError(this, '${coach.firstName}')" class="w-full h-full object-cover object-top" />
@@ -2190,11 +2206,30 @@
       track.innerHTML = '';
 
       ARCHIVE_ITEMS.forEach((item, idx) => {
-        const offsetClass = idx % 2 === 1 ? 'mt-6' : 'mt-0';
+        const offsetClass = idx % 2 === 1 ? 'mt-3 sm:mt-6' : 'mt-0';
         const card = document.createElement('div');
-        card.className = `archive-card relative shrink-0 rounded-2xl overflow-hidden border border-white/10 ${offsetClass} transition-all duration-500 group cursor-pointer shadow-xl bg-[#0B0E17] hover:border-[#F97316] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]`;
-        card.style.width = 'clamp(260px, 20vw, 320px)';
+        card.className = `archive-card flex-shrink-0 w-[78vw] sm:w-[280px] snap-center relative rounded-2xl overflow-hidden border border-white/10 ${offsetClass} transition-all duration-500 group cursor-pointer shadow-xl bg-[#0B0E17] hover:border-[#F97316] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]`;
         card.style.aspectRatio = '3 / 4.6';
+        card.setAttribute('tabindex', '0');
+
+        // Touch/tap trigger for B&W-to-color transition and zoom-scale pulse on mobile
+        card.addEventListener('touchstart', () => {
+          archiveAutoScrollActive = false;
+          clearTimeout(archiveAutoScrollTimer);
+          archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3000);
+
+          document.querySelectorAll('.archive-card.active-focus').forEach(c => {
+            if (c !== card) {
+              c.classList.remove('active-focus');
+              gsap.to(c, { scale: 1.0, duration: 0.35, ease: 'power2.out' });
+            }
+          });
+          card.classList.add('active-focus');
+          gsap.fromTo(card, 
+            { scale: 1.0 }, 
+            { scale: 1.06, duration: 0.45, yoyo: true, repeat: 1, ease: 'sine.inOut' }
+          );
+        }, { passive: true });
 
         card.innerHTML = `
           <!-- Athlete photo: defaults to dark monochrome, brightens and scales on hover -->
@@ -2347,8 +2382,7 @@
 
       VIP_VOICES.forEach((voice, idx) => {
         const card = document.createElement('div');
-        card.className = 'vip-card clean-image-card bg-[#131824] hover:bg-[#1A2234] border border-white/10 hover:border-[#F97316]/60 rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_0_30px_rgba(249,115,22,0.25)] group cursor-pointer shrink-0';
-        card.style.width = 'clamp(300px, 30vw, 400px)';
+        card.className = 'vip-card clean-image-card flex-shrink-0 w-[82vw] sm:w-[360px] snap-center bg-[#131824] hover:bg-[#1A2234] border border-white/10 hover:border-[#F97316]/60 rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_0_30px_rgba(249,115,22,0.25)] group cursor-pointer';
         card.onclick = () => openProfileModal('voice', idx);
 
         const initials = voice.name.split(' ').map(n => n[0]).join('');
