@@ -194,7 +194,7 @@ body {
   opacity: 0.85;
 }
 
-/* Scrollbar None & Touch Pan Utility (Mobile & Desktop) */
+/* Global Overflow Safety */
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -202,7 +202,8 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
-/* Section 03 & 05 Track Container Overrides */
+
+/* Horizontal Track Containers */
 #lineup-scroll-container,
 #archive-scroll-container {
   display: flex !important;
@@ -213,14 +214,37 @@ body {
   width: 100% !important;
   touch-action: pan-x pan-y !important;
   -webkit-overflow-scrolling: touch !important;
-  scroll-snap-type: none !important; /* Disables WebKit mobile lock during JS marquee */
+  scroll-snap-type: none !important; /* Prevents WebKit touch lock on mobile */
   scroll-behavior: smooth !important;
+  will-change: scroll-position;
 }
 
+/* Card Child Sizing */
 #lineup-scroll-container > *,
 #archive-scroll-container > * {
   flex: 0 0 auto !important;
   flex-shrink: 0 !important;
+}
+
+@media (max-width: 768px) {
+  #lineup-scroll-container .coach-card {
+    flex: 0 0 82vw !important;
+    max-width: 320px !important;
+  }
+  #archive-scroll-container .archive-card {
+    flex: 0 0 78vw !important;
+    max-width: 300px !important;
+  }
+}
+
+/* Mobile Center-Active Card Highlight */
+.coach-card.mobile-active,
+.archive-card.mobile-active {
+  filter: grayscale(0%) contrast(100%) brightness(100%) !important;
+  border-color: #F97316 !important;
+  transform: scale(1.03) !important;
+  box-shadow: 0 0 35px rgba(249, 115, 22, 0.35) !important;
+  transition: all 0.4s ease-in-out;
 }
 
 /* Horizontal Scrolling */
