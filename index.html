@@ -341,27 +341,41 @@
     .coach-card:hover img,
     .coach-card.active img,
     .coach-card.is-active-touch img,
+    .coach-card.mobile-active img,
     .archive-card:hover img,
     .archive-card.active img,
     .archive-card.active-focus img,
     .archive-card.in-view img,
     .archive-card.is-active-touch img,
+    .archive-card.mobile-active img,
     .vip-card:hover img,
     .track-stack-card:hover img,
     .track-stack-card.active img {
       filter: grayscale(0%) contrast(100%) brightness(100%) !important;
-      transform: scale(1.03);
+      transform: scale(1.04) !important;
+    }
+
+    .coach-card {
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+    .coach-card.mobile-active {
+      border-color: rgba(249, 115, 22, 0.6) !important;
+      box-shadow: 0 0 35px rgba(249, 115, 22, 0.35) !important;
+      transform: scale(1.04);
     }
 
     .archive-card {
-      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       will-change: transform;
     }
     .archive-card.active-focus,
     .archive-card.is-active-touch,
+    .archive-card.mobile-active,
     .archive-card:hover {
       border-color: #F97316 !important;
       box-shadow: 0 0 35px rgba(249, 115, 22, 0.45) !important;
+      transform: scale(1.04);
     }
 
     /* Video 23 Archive Duotone Glow Tint */
@@ -388,14 +402,16 @@
     .archive-card:hover .archive-duotone-color,
     .archive-card.active-focus .archive-duotone-color,
     .archive-card.is-active-touch .archive-duotone-color,
+    .archive-card.mobile-active .archive-duotone-color,
     .archive-card.active .archive-duotone-color {
-      opacity: 0.5;
+      opacity: 0.5 !important;
     }
     .archive-card:hover .archive-duotone-glow,
     .archive-card.active-focus .archive-duotone-glow,
     .archive-card.is-active-touch .archive-duotone-glow,
+    .archive-card.mobile-active .archive-duotone-glow,
     .archive-card.active .archive-duotone-glow {
-      opacity: 0.85;
+      opacity: 1 !important;
     }
 
     /* Preloader Slanted Vertical Parallelogram Stripes */
@@ -429,18 +445,14 @@
       width: 100% !important;
       touch-action: pan-x pan-y !important;
       -webkit-overflow-scrolling: touch !important;
-      scroll-snap-type: x mandatory !important;
+      scroll-snap-type: none !important; /* Disables WebKit mobile lock during JS marquee */
       scroll-behavior: smooth !important;
     }
 
-    /* Force children not to shrink */
     #lineup-scroll-container > *,
-    #archive-scroll-container > *,
-    #lineup-scroll-container .coach-card,
-    #archive-scroll-container .archive-card {
+    #archive-scroll-container > * {
       flex: 0 0 auto !important;
       flex-shrink: 0 !important;
-      scroll-snap-align: center !important;
     }
 
     /* Smooth horizontal scroll setups */
@@ -572,32 +584,32 @@
       <div class="curtain-strip flex-1 h-full bg-[#F97316] origin-center" style="transform: skewX(-14deg);"></div>
     </div>
 
-    <!-- Preloader Text & Counter Layer (in solid pitch-black text against the orange canvas) -->
-    <div id="preloader-content" class="relative z-10 flex flex-col justify-between h-full p-6 sm:p-10 md:p-14">
+    <!-- Preloader Text & Counter Layer (in solid Dark Obsidian #0B0E17 text against the orange canvas #F97316) -->
+    <div id="preloader-content" class="relative z-10 flex flex-col justify-between h-full p-6 sm:p-10 md:p-14 text-[#0B0E17]">
       <!-- Top row -->
-      <div class="flex items-center justify-between text-xs font-mono tracking-[0.25em] text-black font-bold uppercase">
+      <div class="flex items-center justify-between text-xs font-mono tracking-[0.25em] text-[#0B0E17] font-bold uppercase">
         <div class="flex items-center gap-3">
-          <span class="inline-block w-2.5 h-2.5 rounded-full bg-black"></span>
-          <span class="text-black font-black tracking-widest">MOMENTUM STUDIO</span>
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#0B0E17]"></span>
+          <span class="text-[#0B0E17] font-black tracking-widest">MOMENTUM STUDIO</span>
         </div>
-        <span class="hidden sm:inline-block text-black/80 font-bold">MRC NAGAR · CHENNAI</span>
-        <span class="text-black/80 font-bold">001 / CALIBRATION</span>
+        <span class="hidden sm:inline-block text-[#0B0E17]/80 font-bold">MRC NAGAR · CHENNAI</span>
+        <span class="text-[#0B0E17]/80 font-bold">001 / CALIBRATION</span>
       </div>
 
       <!-- Center words with GSAP bounce reveal -->
       <div class="my-auto text-center">
-        <p class="font-mono text-xs sm:text-sm tracking-[0.4em] text-black/85 uppercase mb-4 font-bold">
+        <p class="font-mono text-xs sm:text-sm tracking-[0.4em] text-[#0B0E17]/85 uppercase mb-4 font-bold">
           PERFORMANCE ARCHITECTURE
         </p>
-        <h1 id="preloader-letters" class="headline-bebas text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] tracking-wider text-black flex flex-wrap justify-center gap-x-4 sm:gap-x-8 leading-none">
+        <h1 id="preloader-letters" class="headline-bebas text-6xl sm:text-8xl md:text-9xl lg:text-[10rem] tracking-wider text-[#0B0E17] flex flex-wrap justify-center gap-x-4 sm:gap-x-8 leading-none">
           <span class="pre-word inline-block overflow-hidden">
-            <span class="pre-word-bounce inline-block text-black">MOMENTUM</span>
+            <span class="pre-word-bounce inline-block text-[#0B0E17]">MOMENTUM</span>
           </span>
           <span class="pre-word inline-block overflow-hidden">
-            <span class="pre-word-bounce inline-block text-black">STUDIO</span>
+            <span class="pre-word-bounce inline-block text-[#0B0E17]">STUDIO</span>
           </span>
         </h1>
-        <p class="font-mono text-[11px] sm:text-xs tracking-[0.3em] text-black/80 uppercase mt-6 font-semibold">
+        <p class="font-mono text-[11px] sm:text-xs tracking-[0.3em] text-[#0B0E17]/80 uppercase mt-6 font-semibold">
           HYROX AFFILIATED · STRENGTH & CONDITIONING · VALD TECH
         </p>
       </div>
@@ -605,13 +617,13 @@
       <!-- Bottom row with counter & progress bar -->
       <div class="w-full">
         <div class="flex items-baseline justify-between font-mono mb-3 text-xs sm:text-sm">
-          <span class="text-black/80 tracking-widest uppercase font-bold">INITIALIZING ENGINE</span>
-          <div class="flex items-baseline font-bebas text-4xl sm:text-6xl text-black font-bold">
-            <span id="preloader-counter">0</span><span class="text-black text-2xl sm:text-3xl ml-1 font-mono">%</span>
+          <span class="text-[#0B0E17]/80 tracking-widest uppercase font-bold">INITIALIZING ENGINE</span>
+          <div class="flex items-baseline font-bebas text-4xl sm:text-6xl text-[#0B0E17] font-bold">
+            <span id="preloader-counter">0</span><span class="text-[#0B0E17] text-2xl sm:text-3xl ml-1 font-mono">%</span>
           </div>
         </div>
-        <div class="w-full h-[3px] bg-black/20 relative overflow-hidden rounded-full">
-          <div id="preloader-bar" class="h-full bg-black w-full origin-left scale-x-0"></div>
+        <div class="w-full h-[3px] bg-[#0B0E17]/20 relative overflow-hidden rounded-full">
+          <div id="preloader-bar" class="h-full bg-[#0B0E17] w-full origin-left scale-x-0"></div>
         </div>
       </div>
     </div>
@@ -2080,15 +2092,16 @@
       track.innerHTML = '';
 
       COACHES.forEach((coach, idx) => {
+        const isAkkil = idx === 0 || coach.firstName.toUpperCase() === 'AKKIL' || (coach.image && coach.image.toUpperCase().includes('AKKIL'));
+        const objPosStyle = isAkkil ? 'style="object-position: center 15% !important;"' : 'style="object-position: center top;"';
+
         const card = document.createElement('div');
-        card.className = 'coach-card clean-image-card flex-shrink-0 w-[85vw] min-w-[280px] sm:w-[340px] snap-center transition-all duration-500 transform hover:-translate-y-2 group relative overflow-hidden bg-[#131824] rounded-2xl cursor-pointer border border-white/10 hover:border-[#F97316]/60 hover:shadow-[0_0_35px_rgba(249,115,22,0.35)]';
+        card.className = 'coach-card clean-image-card flex-shrink-0 w-[82vw] sm:w-[340px] snap-center transition-all duration-500 transform hover:-translate-y-2 group relative overflow-hidden bg-[#131824] rounded-2xl cursor-pointer border border-white/10 hover:border-[#F97316]/60 hover:shadow-[0_0_35px_rgba(249,115,22,0.35)]';
         card.style.aspectRatio = '3 / 4.1';
         card.setAttribute('data-index', idx);
         card.onclick = () => openProfileModal('coach', idx);
         card.addEventListener('touchstart', () => {
-          coachAutoScrollActive = false;
-          clearTimeout(coachAutoScrollTimer);
-          coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3000);
+          if (lineupMarquee) lineupMarquee.pause();
           document.querySelectorAll('.coach-card.is-active-touch').forEach(c => {
             if (c !== card) c.classList.remove('is-active-touch');
           });
@@ -2096,7 +2109,7 @@
         }, { passive: true });
 
         card.innerHTML = `
-          <img src="${coach.image}" alt="${coach.firstName} ${coach.lastName}" onerror="handleImgError(this, '${coach.firstName}')" class="w-full h-full object-cover object-top" />
+          <img src="${coach.image}" alt="${coach.firstName} ${coach.lastName}" onerror="handleImgError(this, '${coach.firstName}')" class="w-full h-full object-cover" ${objPosStyle} />
           
           <!-- Dark gradient bottom overlay -->
           <div class="absolute inset-0 bg-gradient-to-t from-[#0B0E17] via-[#0B0E17]/40 to-transparent z-10 pointer-events-none"></div>
@@ -2131,70 +2144,82 @@
       });
 
       enableDragScroll(container);
-      initCoachAutoScroll();
+      lineupMarquee = initUnifiedTicker('lineup-scroll-container', 320);
+      initMobileIntersectionObserver();
     }
 
-    // Coach Continuous Motion Engine (Horizontal continuous auto-scrolling track)
-    let coachAutoScrollActive = true;
-    let coachAutoScrollTimer = null;
+    /* ----------------------------------------------------
+       UNIFIED AUTO-MARQUEE & TOUCH/DRAG TICKER
+    ---------------------------------------------------- */
+    let lineupMarquee = null;
+    let archiveMarquee = null;
 
-    function initCoachAutoScroll() {
-      const container = document.getElementById('lineup-scroll-container');
-      if (!container) return;
+    function initUnifiedTicker(containerId, shiftAmount = 320) {
+      const container = document.getElementById(containerId);
+      if (!container) return null;
 
-      const speed = 0.75; // Smooth continuous glide speed in px per frame
-      function autoScrollLoop() {
-        if (coachAutoScrollActive) {
+      const speed = 0.8; // Glides horizontally continuously at speed 0.8px per frame
+      let isActive = true;
+      let resumeTimer = null;
+
+      function tickerLoop() {
+        if (isActive) {
           const maxScroll = container.scrollWidth - container.clientWidth;
           if (maxScroll > 10) {
             container.style.setProperty('scroll-behavior', 'auto', 'important');
-            container.style.setProperty('scroll-snap-type', 'none', 'important');
             if (container.scrollLeft >= maxScroll - 2) {
-              container.scrollLeft = 0; // Loop wrap seamlessly
+              container.scrollLeft = 0; // Automatically loops back to start when reaching scroll end
             } else {
               container.scrollLeft += speed;
             }
           }
         }
-        requestAnimationFrame(autoScrollLoop);
+        requestAnimationFrame(tickerLoop);
       }
-      requestAnimationFrame(autoScrollLoop);
+      requestAnimationFrame(tickerLoop);
 
-      function pauseCoachAutoScroll() {
-        coachAutoScrollActive = false;
+      function pauseTicker() {
+        isActive = false;
+        clearTimeout(resumeTimer);
         container.style.removeProperty('scroll-behavior');
-        container.style.removeProperty('scroll-snap-type');
       }
 
-      function resumeCoachAutoScroll(delay = 2500) {
-        clearTimeout(coachAutoScrollTimer);
-        coachAutoScrollTimer = setTimeout(() => {
-          coachAutoScrollActive = true;
+      function resumeTicker(delay = 1800) {
+        clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(() => {
+          isActive = true;
         }, delay);
       }
 
-      // Smooth pause on hover
-      container.addEventListener('mouseenter', pauseCoachAutoScroll);
-      container.addEventListener('mouseleave', () => resumeCoachAutoScroll(800));
+      // Pauses seamlessly on mouseenter, touchstart, mousedown, or pointerdown
+      ['mouseenter', 'touchstart', 'mousedown', 'pointerdown'].forEach((evt) => {
+        container.addEventListener(evt, pauseTicker, { passive: true });
+      });
 
-      // Pause during touch swipe / drag interactions and resume after delay
-      container.addEventListener('touchstart', pauseCoachAutoScroll, { passive: true });
-      container.addEventListener('touchend', () => resumeCoachAutoScroll(2500), { passive: true });
-      container.addEventListener('touchcancel', () => resumeCoachAutoScroll(2500), { passive: true });
-      container.addEventListener('mousedown', pauseCoachAutoScroll);
-      container.addEventListener('mouseup', () => resumeCoachAutoScroll(2500));
+      // Resumes glides smoothly on mouseleave, touchend, mouseup, or pointerup
+      ['mouseleave', 'touchend', 'mouseup', 'pointerup', 'touchcancel'].forEach((evt) => {
+        container.addEventListener(evt, () => resumeTicker(2000), { passive: true });
+      });
+
+      return {
+        pause: pauseTicker,
+        resume: resumeTicker,
+        scrollBy: (dir) => {
+          pauseTicker();
+          container.style.removeProperty('scroll-behavior');
+          container.scrollBy({ left: dir * shiftAmount, behavior: 'smooth' });
+          resumeTicker(3200);
+        }
+      };
     }
 
-    function scrollLineup(direction) {
-      coachAutoScrollActive = false;
-      const container = document.getElementById('lineup-scroll-container');
-      if (container) {
-        container.style.removeProperty('scroll-behavior');
-        container.style.removeProperty('scroll-snap-type');
-        container.scrollBy({ left: direction * 360, behavior: 'smooth' });
+    function scrollLineup(dir) {
+      if (lineupMarquee) {
+        lineupMarquee.scrollBy(dir);
+      } else {
+        const container = document.getElementById('lineup-scroll-container');
+        if (container) container.scrollBy({ left: dir * 320, behavior: 'smooth' });
       }
-      clearTimeout(coachAutoScrollTimer);
-      coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 3500);
     }
 
     /* ----------------------------------------------------
@@ -2260,7 +2285,7 @@
       ARCHIVE_ITEMS.forEach((item, idx) => {
         const offsetClass = idx % 2 === 1 ? 'mt-3 sm:mt-6' : 'mt-0';
         const card = document.createElement('div');
-        card.className = 'archive-card flex-shrink-0 w-[80vw] min-w-[260px] sm:w-[300px] h-[420px] sm:h-[480px] snap-center rounded-2xl overflow-hidden shadow-2xl relative group cursor-pointer border border-white/10 transition-all duration-500 bg-[#0B0E17] hover:border-[#F97316] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]';
+        card.className = 'archive-card flex-shrink-0 w-[78vw] sm:w-[300px] h-[420px] sm:h-[480px] snap-center rounded-2xl overflow-hidden shadow-2xl relative group cursor-pointer border border-white/10 transition-all duration-500 bg-[#0B0E17] hover:border-[#F97316] hover:shadow-[0_0_35px_rgba(249,115,22,0.4)]';
         card.setAttribute('tabindex', '0');
 
         // GSAP Zoom pulse on card hover
@@ -2273,9 +2298,7 @@
 
         // Touch/tap trigger for B&W-to-color transition and zoom-scale pulse on mobile
         card.addEventListener('touchstart', () => {
-          archiveAutoScrollActive = false;
-          clearTimeout(archiveAutoScrollTimer);
-          archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3000);
+          if (archiveMarquee) archiveMarquee.pause();
 
           document.querySelectorAll('.archive-card.is-active-touch').forEach(c => {
             if (c !== card) {
@@ -2318,71 +2341,64 @@
       });
 
       enableDragScroll(container);
-      initArchiveAutoScroll();
+      archiveMarquee = initUnifiedTicker('archive-scroll-container', 320);
       initArchiveCardPulse();
-    }
-
-    // Section 05 Continuous Motion Engine (Horizontal continuous auto-scrolling track)
-    let archiveAutoScrollActive = true;
-    let archiveAutoScrollTimer = null;
-
-    function initArchiveAutoScroll() {
-      const container = document.getElementById('archive-scroll-container');
-      if (!container) return;
-
-      const speed = 0.75; // Continuous glide speed in px per frame
-      function autoScrollLoop() {
-        if (archiveAutoScrollActive) {
-          const maxScroll = container.scrollWidth - container.clientWidth;
-          if (maxScroll > 10) {
-            container.style.setProperty('scroll-behavior', 'auto', 'important');
-            container.style.setProperty('scroll-snap-type', 'none', 'important');
-            if (container.scrollLeft >= maxScroll - 2) {
-              container.scrollLeft = 0; // Seamless loop wrap
-            } else {
-              container.scrollLeft += speed;
-            }
-          }
-        }
-        requestAnimationFrame(autoScrollLoop);
-      }
-      requestAnimationFrame(autoScrollLoop);
-
-      function pauseArchiveAutoScroll() {
-        archiveAutoScrollActive = false;
-        container.style.removeProperty('scroll-behavior');
-        container.style.removeProperty('scroll-snap-type');
-      }
-
-      function resumeArchiveAutoScroll(delay = 2500) {
-        clearTimeout(archiveAutoScrollTimer);
-        archiveAutoScrollTimer = setTimeout(() => {
-          archiveAutoScrollActive = true;
-        }, delay);
-      }
-
-      // Smooth pause on hover
-      container.addEventListener('mouseenter', pauseArchiveAutoScroll);
-      container.addEventListener('mouseleave', () => resumeArchiveAutoScroll(800));
-
-      // Pause during touch swipe / drag interactions and resume after delay
-      container.addEventListener('touchstart', pauseArchiveAutoScroll, { passive: true });
-      container.addEventListener('touchend', () => resumeArchiveAutoScroll(2500), { passive: true });
-      container.addEventListener('touchcancel', () => resumeArchiveAutoScroll(2500), { passive: true });
-      container.addEventListener('mousedown', pauseArchiveAutoScroll);
-      container.addEventListener('mouseup', () => resumeArchiveAutoScroll(2500));
+      initMobileIntersectionObserver();
     }
 
     function scrollArchive(dir) {
-      archiveAutoScrollActive = false;
-      const container = document.getElementById('archive-scroll-container');
-      if (container) {
-        container.style.removeProperty('scroll-behavior');
-        container.style.removeProperty('scroll-snap-type');
-        container.scrollBy({ left: dir * 320, behavior: 'smooth' });
+      if (archiveMarquee) {
+        archiveMarquee.scrollBy(dir);
+      } else {
+        const container = document.getElementById('archive-scroll-container');
+        if (container) container.scrollBy({ left: dir * 320, behavior: 'smooth' });
       }
-      clearTimeout(archiveAutoScrollTimer);
-      archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 3500);
+    }
+
+    /* ----------------------------------------------------
+       MOBILE INTERSECTION OBSERVER FOR VISUAL EFFECT PARITY
+    ---------------------------------------------------- */
+    let mobileObserver = null;
+
+    function initMobileIntersectionObserver() {
+      if (!('IntersectionObserver' in window)) return;
+      if (mobileObserver) {
+        mobileObserver.disconnect();
+      }
+
+      mobileObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const card = entry.target;
+          if (entry.isIntersecting) {
+            card.classList.add('mobile-active');
+            if (typeof gsap !== 'undefined') {
+              gsap.to(card, {
+                scale: 1.04,
+                duration: 0.45,
+                ease: 'power2.out',
+                overwrite: 'auto'
+              });
+            }
+          } else {
+            card.classList.remove('mobile-active');
+            if (typeof gsap !== 'undefined') {
+              gsap.to(card, {
+                scale: 1.0,
+                duration: 0.35,
+                ease: 'power2.out',
+                overwrite: 'auto'
+              });
+            }
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '0px -25% 0px -25%',
+        threshold: 0.5
+      });
+
+      const cards = document.querySelectorAll('#lineup-scroll-container .coach-card, #archive-scroll-container .archive-card');
+      cards.forEach((card) => mobileObserver.observe(card));
     }
 
     // Smooth Zoom-In / Zoom-Out scale pulse on scroll focus / hover
@@ -2560,14 +2576,12 @@
       container.addEventListener('wheel', (e) => {
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
           e.preventDefault();
-          if (containerId === 'lineup-scroll-container') {
-            coachAutoScrollActive = false;
-            clearTimeout(coachAutoScrollTimer);
-            coachAutoScrollTimer = setTimeout(() => { coachAutoScrollActive = true; }, 2500);
-          } else if (containerId === 'archive-scroll-container') {
-            archiveAutoScrollActive = false;
-            clearTimeout(archiveAutoScrollTimer);
-            archiveAutoScrollTimer = setTimeout(() => { archiveAutoScrollActive = true; }, 2500);
+          if (containerId === 'lineup-scroll-container' && lineupMarquee) {
+            lineupMarquee.pause();
+            lineupMarquee.resume(2500);
+          } else if (containerId === 'archive-scroll-container' && archiveMarquee) {
+            archiveMarquee.pause();
+            archiveMarquee.resume(2500);
           }
           container.scrollBy({
             left: e.deltaY * 1.2,
@@ -3069,18 +3083,18 @@
 
       const elements = document.querySelectorAll(bounceSelectors.join(', '));
       elements.forEach((el) => {
-        // Hover bounce: y: -6px to 0px, ease: back.out(2)
+        // Character drop-and-bounce spring animation on hover: y: -8px to 0px, ease: back.out(2.5)
         el.addEventListener('mouseenter', () => {
           gsap.fromTo(el, 
-            { y: -6 }, 
-            { y: 0, duration: 0.4, ease: 'back.out(2)', overwrite: 'auto' }
+            { y: -8 }, 
+            { y: 0, duration: 0.45, ease: 'back.out(2.5)', overwrite: 'auto' }
           );
         });
-        // Click bounce
+        // Click bounce: y: -8px to 0px, ease: back.out(2.5)
         el.addEventListener('click', () => {
           gsap.fromTo(el, 
-            { scale: 0.95, y: -4 }, 
-            { scale: 1, y: 0, duration: 0.45, ease: 'back.out(2.5)', overwrite: 'auto' }
+            { scale: 0.95, y: -8 }, 
+            { scale: 1, y: 0, duration: 0.5, ease: 'back.out(2.5)', overwrite: 'auto' }
           );
         });
       });

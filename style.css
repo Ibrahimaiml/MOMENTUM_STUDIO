@@ -213,18 +213,14 @@ body {
   width: 100% !important;
   touch-action: pan-x pan-y !important;
   -webkit-overflow-scrolling: touch !important;
-  scroll-snap-type: x mandatory !important;
+  scroll-snap-type: none !important; /* Disables WebKit mobile lock during JS marquee */
   scroll-behavior: smooth !important;
 }
 
-/* Force children not to shrink */
 #lineup-scroll-container > *,
-#archive-scroll-container > *,
-#lineup-scroll-container .coach-card,
-#archive-scroll-container .archive-card {
+#archive-scroll-container > * {
   flex: 0 0 auto !important;
   flex-shrink: 0 !important;
-  scroll-snap-align: center !important;
 }
 
 /* Horizontal Scrolling */
